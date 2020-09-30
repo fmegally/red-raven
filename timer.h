@@ -41,3 +41,13 @@ struct tcnt {
 	uint8_t _padding_1;
 	uint8_t _padding_2;
 };
+
+int timer_init (struct tcnt * timer, enum tcnt_modes mode);
+void timer_start(struct tcnt * timer, enum tcnt_clk_src);
+void timer_stop (struct tcnt * timer);
+void timer_get_input_capture(struct tcnt * timer, uint16_t *dst);
+void timer_set_pwm_ds(struct tcnt * timer, uint8_t duty_cycle);
+void timer_set_pwm_frq(struct tcnt * timer, uint16_t frq);
+
+
+
