@@ -11,3 +11,23 @@ volatile struct gpio * const __attribute__ ((packed)) GPIO_H= (volatile struct g
 volatile struct gpio * const __attribute__ ((packed)) GPIO_J= (volatile struct gpio *) &PORTJ;
 volatile struct gpio * const __attribute__ ((packed)) GPIO_K= (volatile struct gpio *) &PORTK;
 volatile struct gpio * const __attribute__ ((packed)) GPIO_L= (volatile struct gpio *) &PORTL;
+
+void gpio_setmode(struct gpio* const port, uint8_t mode)
+{
+	port->DDR = mode;
+	return;
+}
+
+void gpio_pwrite(struct gpio* const port, uint8_t value)
+{
+	port->PORT = value;
+	return;
+}
+
+uint8_t gpio_pread(struct gpio* const port)
+{
+	return port->PIN;
+}
+
+
+
