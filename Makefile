@@ -23,5 +23,5 @@ clean:
 	rm *.bin
 
 flash:
-	avrdude -p $(MCU) -c $(PROG) -U flash:w:spig.hex:i
+	avrdude -p $(MCU) -c $(PROG) -U flash:w:main.hex:i
 
