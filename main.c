@@ -4,6 +4,6 @@
 int main (void)
 {
 	while(1);
-	return;
+	return 0;
 }
 

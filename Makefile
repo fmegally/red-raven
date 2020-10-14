@@ -1,10 +1,10 @@
 CC = avr-gcc
 CFLAGS = -Wall
-OBJ = main.o
+OBJ = main.o gpio.o
 MCU = atmega2560
 PROG = USBtiny
 DEPS = $(wildcard *.h)
-TARGET = ecm
+TARGET = main
 
 $(TARGET).hex:$(TARGET).bin
 	avr-objcopy -j .text -j .data -O ihex $< $@ 
