@@ -1,6 +1,6 @@
 #include <avr/io.h>
 #include <stdint.h>
-
+#include "bits.h"
 
 struct gpio {
 	uint8_t PIN;
@@ -24,3 +24,7 @@ void gpio_setmode(volatile struct gpio* const port, uint8_t mode);
 void gpio_pwrite(volatile struct gpio* const port, uint8_t value);
 uint8_t gpio_pread(volatile struct gpio* const port);
 
+void gpio_setbit(volatile struct gpio* const port, uint8_t pin);
+void gpio_clrbit(volatile struct gpio* const port, uint8_t pin);
+uint8_t gpio_getbit(volatile struct gpio* const port, uint8_t pin);
+void gpio_flipbit(volatile struct gpio* const port, uint8_t pin);

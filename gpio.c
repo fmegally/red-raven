@@ -29,5 +29,25 @@ uint8_t gpio_pread(volatile struct gpio* const port)
 	return port->PIN;
 }
 
+void gpio_setbit(volatile struct gpio* const port, uint8_t pin)
+{
+	BITSET(port->PORT, pin);
+	return;
+}
 
+void gpio_clrbit(volatile struct gpio* const port, uint8_t pin)
+{
+	BITCLR(port->PORT, pin);
+	return;
+}
 
+uint8_t gpio_getbit(volatile struct gpio* const port, uint8_t pin)
+{
+	return BITGET(port->PORT, pin);
+}
+
+void gpio_flipbit(volatile struct gpio* const port, uint8_t pin)
+{
+	BITFLIP(port->PORT, pin);
+	return;
+}
