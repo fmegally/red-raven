@@ -28,14 +28,18 @@
 
 struct uart
 {
-	uint8_t UCSRnA;
-	uint8_t UCSRnB;
-	uint8_t UCSRnC;
-	uint8_t padding_0;
+	uint8_t  UCSRnA;
+	uint8_t  UCSRnB;
+	uint8_t  UCSRnC;
+	uint8_t  _padding_0;
 	uint16_t UBRRn;
-	uint8_t UDR;
-	uint8_t padding_1;
+	uint8_t  UDRn;
+	uint8_t  _padding_1;
 };
+
+volatile struct uart* const UART_0;
+volatile struct uart* const UART_1;
+volatile struct uart* const UART_2;
 
 void UART_init(uint32_t baud, uint8_t parity, uint8_t byte_size );
 void UART_write(const uint8_t* buff, uint8_t len);
