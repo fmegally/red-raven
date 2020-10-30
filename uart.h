@@ -26,7 +26,18 @@
 #define UART_CHAR_SIZE_8BIT 3
 #define UART_CHAR_SIZE_9BIT 7
 
-void UART_Init(uint32_t baud, uint8_t parity, uint8_t byte_size );
+struct uart
+{
+	uint8_t UCSRnA;
+	uint8_t UCSRnB;
+	uint8_t UCSRnC;
+	uint8_t padding_0;
+	uint16_t UBRRn;
+	uint8_t UDR;
+	uint8_t padding_1;
+};
+
+void UART_init(uint32_t baud, uint8_t parity, uint8_t byte_size );
 void UART_write(const uint8_t* buff, uint8_t len);
 void UART_print(const char* str);
 void UART_putc(char c);
