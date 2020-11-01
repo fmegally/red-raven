@@ -26,17 +26,17 @@ struct uart
 
 typedef struct uart uart_t;
 
-#define UART0_BASE	 (0xC0)
-#define UART0 		 ((uart *) UART0_BASE)
+#define UART0_BASE_ADD	 (0xC0)
+#define UART0 		 ((uart_t *) UART0_BASE_ADD)
 
-#define UART1_BASE	 (0xC8)
-#define UART1 		 ((uart *) UART0_BASE)
+#define UART1_BASE_ADD	 (0xC8)
+#define UART1 		 ((uart_t *) UART0_BASE_ADD)
 
-#define UART2_BASE	 (0xD0)
-#define UART2 		 ((uart *) UART0_BASE)
+#define UART2_BASE_ADD	 (0xD0)
+#define UART2 		 ((uart_t *) UART0_BASE_ADD)
 
-#define UART3_BASE	 (0x130)
-#define UART3 		 ((uart *) UART0_BASE)
+#define UART3_BASE_ADD	 (0x130)
+#define UART3 		 ((uart_t *) UART0_BASE_ADD)
 
 #define RXCn    7
 #define TXCn    6
@@ -79,8 +79,11 @@ typedef struct uart uart_t;
 #define UART_CHAR_SIZE_9BIT 7
 
 
-void UART_init(const uart* base, uint32_t baud, uint8_t parity, uint8_t byte_size );
-void UART_write(const uart* base, const uint8_t* buff, uint8_t len);
-void UART_print(const uart* base, const char* str);
-void UART_putc(const uart* base, char c);
+void UART_init(const uart_t* base, uint32_t baud, uint8_t parity, uint8_t byte_size );
+voit UART_read(const uart_t* base, const uint8_t* buff, uint8_t len);
+void UART_write(const uart_t* base, const uint8_t* buff, uint8_t len);
+void UART_print(const uart_t* base, const char* str);
+void UART_putc(const uart_t* base, char c);
+void UART_getc(const uart_t* base, char* c);
+
 #endif /* UART_H_ */
