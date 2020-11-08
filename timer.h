@@ -26,28 +26,27 @@ enum tcnt_clk_src {None,
 	      Ext_Falling,
 	      Ext_Rising};
 
-struct tcnt {
-	uint8_t TCCRnA; // Timer/Counter n Control Register A
-	uint8_t TCCRnB; // Timer/Counter n Control Register B
-	uint8_t TCCRnC; // Timer/Counter n Control Register C
+struct tcnt_16b {
+	uint8_t TCCRnA;     // Timer/Counter n Control Register A
+	uint8_t TCCRnB;     // Timer/Counter n Control Register B
+	uint8_t TCCRnC;     // Timer/Counter n Control Register C
 	uint8_t _padding_0;
-	uint16_t TCNTn; // Timer/Counter
-	uint16_t OCRnA; // Output Compare A
-	uint16_t OCRnB; // Output Compare B
-	uint16_t OCRnC; // Output Compare C
-	uint16_t ICRn;  // Input Capture
-	uint8_t TIMSKn; // Interrupt Mask
-	uint8_t TIFRn;  // Interrupt Flags
+	uint16_t TCNTn;     // Timer/Counter
+	uint16_t ICRn;      // Input Capture
+	uint16_t OCRnA;     // Output Compare A
+	uint16_t OCRnB;     // Output Compare B
+	uint16_t OCRnC;     // Output Compare C
 	uint8_t _padding_1;
 	uint8_t _padding_2;
 };
 
-int timer_init (struct tcnt * timer, enum tcnt_modes mode);
-void timer_start(struct tcnt * timer, enum tcnt_clk_src);
-void timer_stop (struct tcnt * timer);
-void timer_get_input_capture(struct tcnt * timer, uint16_t *dst);
-void timer_set_pwm_ds(struct tcnt * timer, uint8_t duty_cycle);
-void timer_set_pwm_frq(struct tcnt * timer, uint16_t frq);
+typedef struct tcnt_16b tcnt_16b_t;
 
-
+void timer_init (tcnt_16b_t* timer, enum tcnt_modes mode);
+void timer_start (tcnt_16b_t* timer, enum tcnt_clk_src);
+void timer_stop (tcnt_16b_t* timer);
+void timer_get_input_capture (tcnt_16b_t* timer, uint16_t *dst);
+void timer_set_pwm_dc (tcnt_16b_t* timer, uint8_t duty_cycle);
+void timer_set_pwm_frq (tcnt_16b_t* timer, uint16_t frq);
+void timer_udelay (tcnt_16b_t * timer, uint16_t usec);
 
