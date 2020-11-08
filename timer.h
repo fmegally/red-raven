@@ -26,6 +26,20 @@ enum tcnt_clk_src {None,
 	      Ext_Falling,
 	      Ext_Rising};
 
+struct tcnt_8b {
+	uint8_t TCCRnA;     // Timer/Counter n Control Register A
+	uint8_t TCCRnB;     // Timer/Counter n Control Register B
+	uint8_t TCNTn;     // Timer/Counter
+	uint8_t OCRnA;     // Output Compare A
+	uint8_t OCRnB;     // Output Compare B
+	uint8_t _padding_0;
+};
+
+typedef struct tcnt_8b tcnt_8b_t;
+
+#define TCNT0_8B_BASE_ADD   (0x46)
+#define TCNT0_8B            ((tcnt_8b_t*) TCNT0_8B_BASE_ADD)
+
 struct tcnt_16b {
 	uint8_t TCCRnA;     // Timer/Counter n Control Register A
 	uint8_t TCCRnB;     // Timer/Counter n Control Register B
@@ -42,11 +56,23 @@ struct tcnt_16b {
 
 typedef struct tcnt_16b tcnt_16b_t;
 
+#define TCNT1_16B_BASE_ADD   (0x80)
+#define TCNT1_16B            ((tcnt_16b_t*) TCNT1_8B_BASE_ADD)
+
+#define TCNT3_16B_BASE_ADD   (0x90)
+#define TCNT3_16B            ((tcnt_16b_t*) TCNT3_16B_BASE_ADD)
+
+#define TCNT4_16B_BASE_ADD   (0xA0)
+#define TCNT4_16B            ((tcnt_16b_t*) TCNT3_16B_BASE_ADD)
+
+#define TCNT5_16B_BASE_ADD   (0x120)
+#define TCNT5_16B            ((tcnt_16b_t*) TCNT3_16B_BASE_ADD)
+
 void timer_init (tcnt_16b_t* timer, enum tcnt_modes mode);
 void timer_start (tcnt_16b_t* timer, enum tcnt_clk_src);
 void timer_stop (tcnt_16b_t* timer);
 void timer_get_input_capture (tcnt_16b_t* timer, uint16_t *dst);
-void timer_set_pwm_dc (tcnt_16b_t* timer, uint8_t duty_cycle);
-void timer_set_pwm_frq (tcnt_16b_t* timer, uint16_t frq);
+void timer_set_pwm_dc (tcnt_16b_t* timer, uint16_t duty_cycle);
+void timer_set_pwm_freq (tcnt_16b_t* timer, uint16_t freq);
 void timer_udelay (tcnt_16b_t * timer, uint16_t usec);
 
