@@ -68,7 +68,7 @@ typedef struct tcnt_16b tcnt_16b_t;
 #define TCNT5_16B_BASE_ADD   (0x120)
 #define TCNT5_16B            ((tcnt_16b_t*) TCNT3_16B_BASE_ADD)
 
-void timer_init (tcnt_16b_t* timer, enum tcnt_modes mode);
+void timer_set_mode (tcnt_16b_t* timer, enum tcnt_modes mode);
 void timer_start (tcnt_16b_t* timer, enum tcnt_clk_src);
 void timer_stop (tcnt_16b_t* timer);
 void timer_get_input_capture (tcnt_16b_t* timer, uint16_t *dst);
