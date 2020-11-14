@@ -17,6 +17,8 @@ enum tcnt_modes {Normal,
 		 PWM_Fast_ICRn,
 		 PWM_Fast_OCRnA};
 
+enum tctn_occ {A,B,C};
+
 enum tcnt_clk_src {None,
 	      CPU_Freq,
 	      Prescaler_8,
