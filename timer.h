@@ -17,7 +17,9 @@ enum tcnt_modes {Normal,
 		 PWM_Fast_ICRn,
 		 PWM_Fast_OCRnA};
 
-enum tctn_occ {A,B,C};
+enum tcnt_occ {Chnl_A,Chnl_B,Chnl_C};
+enum tcnt_ocm {Normal, Toggle, ClearOnMatch, SetOnMatch};
+
 
 enum tcnt_clk_src {None,
 	      CPU_Freq,
@@ -70,11 +72,19 @@ typedef struct tcnt_16b tcnt_16b_t;
 #define TCNT5_16B_BASE_ADD   (0x120)
 #define TCNT5_16B            ((tcnt_16b_t*) TCNT3_16B_BASE_ADD)
 
-void timer_set_mode (tcnt_16b_t* timer, enum tcnt_modes mode);
-void timer_start (tcnt_16b_t* timer, enum tcnt_clk_src);
-void timer_stop (tcnt_16b_t* timer);
-void timer_get_input_capture (tcnt_16b_t* timer, uint16_t *dst);
-void timer_set_pwm_dc (tcnt_16b_t* timer, uint16_t duty_cycle);
-void timer_set_pwm_freq (tcnt_16b_t* timer, uint16_t freq);
-void timer_udelay (tcnt_16b_t * timer, uint16_t usec);
+/*
+void timer8_set_mode (tcnt_16b_t* timer, enum tcnt_modes mode);
+void timer8_start (tcnt_16b_t* timer, enum tcnt_clk_src);
+void timer8_stop (tcnt_16b_t* timer);
+void timer8_get_input_capture (tcnt_16b_t* timer, uint16_t *dst);
+void timer8_set_pwm_dc (tcnt_16b_t* timer, uint16_t duty_cycle);
+void timer8_udelay (tcnt_16b_t * timer, uint16_t usec);
+*/
+
+void timer16_set_mode (tcnt_16b_t* timer, enum tcnt_modes mode);
+void timer16_start (tcnt_16b_t* timer, enum tcnt_clk_src);
+void timer16_stop (tcnt_16b_t* timer);
+void timer16_get_input_capture (tcnt_16b_t* timer, uint16_t *dst);
+void timer16_set_ocr (tcnt_16b_t* timer, uint16_t duty_cycle);
+void timer16_udelay (tcnt_16b_t * timer, uint16_t usec);
 
