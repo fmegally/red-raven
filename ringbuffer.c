@@ -11,9 +11,9 @@ struct ringbuffer {
 ringbuffer*
 rb_create(unsigned char buff_size){
 	ringbuffer* buff = (ringbuffer*) malloc(sizeof(ringbuffer));		
-	buff->is_full = 0;
-	buff->data = (unsigned char *) malloc(buff_size * sizeof(unsigned char));
 	buff->size = buff_size;
+	buff->full = FALSE;
+	buff->data = (unsigned char *) malloc(buff_size * sizeof(unsigned char));
 	buff->head = 0;
 	buff->tail = 0;
 	return buff;
@@ -21,10 +21,10 @@ rb_create(unsigned char buff_size){
 
 int
 rb_putchar(const char* c, ringbuffer* buff){
-	if (! buff->is_full){
+	if (! buff->full){
 		buff->data[buff->head] = *c;
 		buff->head = (buff->head + 1) % buff->length;
-		if (buff->head == buff->tail) buff->is_full = 1;
+		if (buff->head == buff->tail) buff->full = TRUE;
 		return 0;
 	} else {
 		return -1;
@@ -41,7 +41,7 @@ rb_getchar(char* c, ringbuffer* buff){
 		if (buff->is_full){
 			*c = buff->data[buff->tail];
 			buff->tail = (buff->tail + 1) % buff->length;
-			buff->is_full = 0;
+			buff->full = FALSE;
 			return 0;
 		} else {
 			return -1;
