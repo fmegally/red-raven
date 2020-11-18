@@ -40,10 +40,10 @@ struct ringbuffer {
 	unsigned char* data;
 };
 
-int rb_init(unsigned char buff_size, struct ringbuffer* buff);
+int rb_init( struct ringbuffer* buff, unsigned char buff_size);
 int rb_putc(const char *c, struct ringbuffer *buff);
 int rb_getc(char *c, struct ringbuffer *buff);
-int rb_isempty(struct ringbuffer *buff);
-int rb_isfull(struct ringbuffer *buff);
+int rb_isempty(const struct ringbuffer *buff);
+int rb_isfull(const struct ringbuffer *buff);
 
 #endif
