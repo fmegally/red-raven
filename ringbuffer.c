@@ -1,5 +1,6 @@
 #include "ringbuffer.h"
 #include <stdlib.h>
+
 int
 rb_init(struct ringbuffer* buff, unsigned char buff_size){
 	buff->data = (unsigned char *) malloc(buff_size * sizeof(unsigned char));
@@ -36,11 +37,16 @@ rb_getc(char* c, struct ringbuffer* buff){
 }
 
 int
-rb_getblock(struct ringbuffer *buff, const char *block, unsigned int size)
+rb_getblock(struct ringbuffer *buff, char *block, unsigned int size)
 {
 	if (size <= buff->cnt){
-		block = &(buff->data[buff->tail]);
+		unsigned int i;
+		for (i=0; i<size; i++){
+			block[i] = buff->data[buff->tail];
+			buff->tail = (buff->tail + 1) % buff->size;
+		}
 		buff->tail = (buff->tail + size) % buff->size;
+		buff->cnt = buff->cnt - size;
 		return 0;
 	} else {
 		return -1;
