@@ -9,6 +9,7 @@
 #define CALLBACK_TABLE_SZ 64
 #define PREAMBLE 0xAA
 #define TERMINATOR 0x55
+#define NAK 0xCC
 
 struct message
 {
@@ -38,7 +39,7 @@ void (*callback_func[CALLBACK_TABLE_SZ])(uint8_t *data);
 enum sc_state {
     IDLE,
     FETCHING,
-    CHECKSUM
+    TERM
 };
 
 void scan(struct ringbuffer *buff, struct message *msg);

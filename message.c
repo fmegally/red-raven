@@ -14,14 +14,17 @@ void scan(struct ringbuffer *buff, struct message *msg)
             if(c == PREAMBLE){
                 state = FETCHING;
             } else {
-                
+                UART_putc(UART0,NAK);
             }
-            
             break;
         case FETCHING:
-            state = CHECKSUM;
+            if (n < sizeof(msg)){
+                ((uint8_t*)msg)[n++] = c;
+            } else {
+                state = CHECKSUM;    
+            }
             break;
-        case CHECKSUM:
+        case TERM:
             state = IDLE;
             break;
         default:
