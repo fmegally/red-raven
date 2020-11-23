@@ -3,9 +3,12 @@
 
 #include <stdint.h>
 #include "ringbuffer.h"
+#include "uart.h"
 
-#define MSG_SZ 8;
-#define CALLBACK_TABLE_SZ 64;
+#define MSG_SZ 8
+#define CALLBACK_TABLE_SZ 64
+#define PREAMBLE 0xAA
+#define TERMINATOR 0x55
 
 struct message
 {

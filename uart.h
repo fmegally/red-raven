@@ -79,11 +79,11 @@ typedef struct uart uart_t;
 #define UART_CHAR_SIZE_9BIT 7
 
 
-void UART_init(const uart_t* base, uint32_t baud, uint8_t parity, uint8_t byte_size );
-voit UART_read(const uart_t* base, const uint8_t* buff, uint8_t len);
-void UART_write(const uart_t* base, const uint8_t* buff, uint8_t len);
-void UART_print(const uart_t* base, const char* str);
-void UART_putc(const uart_t* base, char c);
-void UART_getc(const uart_t* base, char* c);
+void UART_init(uart_t* base, uint32_t baud, uint8_t parity, uint8_t byte_size );
+void UART_read(uart_t* base, const uint8_t* buff, uint8_t len);
+void UART_write(uart_t* base, const uint8_t* buff, uint8_t len);
+void UART_print(uart_t* base, const char* str);
+void UART_putc(uart_t* base, char c);
+void UART_getc(uart_t* base, char* c);
 
 #endif /* UART_H_ */
