@@ -4,6 +4,7 @@
  * Created: 3/25/2020 11:48:09 PM
  *  Author: fmega
  */ 
+
 #include "uart.h"
 
 void UART_init(uart_t* base, uint32_t baud, uint8_t parity, uint8_t byte_size )
