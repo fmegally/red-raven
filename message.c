@@ -6,19 +6,15 @@ int8_t scan(struct ringbuffer *buff, struct message *msg)
     static enum sc_state state = IDLE;
     uint8_t c;
      
-    while(true)
+    while(state != STOP)
     {
         if(rb_getc(&c, buff))
         {
             switch(state)
             {
                 case IDLE:
-                    if(c == PREAMBLE){
-                        state = FETCHING;
-                        continue;
-                    } else {
-                        return ERROR_INVALID_PREAMBLE;
-                    }
+                    if(c == PREAMBLE) state = FETCHING;
+                    continue;
 
                 case FETCHING:
                     ((uint8_t*)msg)[n++] = c;
@@ -27,6 +23,13 @@ int8_t scan(struct ringbuffer *buff, struct message *msg)
 
                 case TERM:
                     if (c == TERMINATOR && chksum((uint8_t *)msg, sizeof(*msg)))
+                    {
+                        state = STOP;
+                        UART_putc(UART0, ACK);
+                    } else {
+                        state = IDLE;
+                        UART_putc(UART0, NAK);
+                    }
             }
         } else {
             continue;

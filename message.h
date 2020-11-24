@@ -10,7 +10,9 @@
 #define CALLBACK_TABLE_SZ   64
 #define PREAMBLE            0xAA
 #define TERMINATOR          0x55
-#define NAK                 0xCC
+#define ACK                 0x06
+#define NAK                 0x15
+
 
 #define ERROR_INVALID_PREAMBLE  -1
 #define ERROR_FSM_FAULT         -2
@@ -43,7 +45,8 @@ extern void (*callback_func[CALLBACK_TABLE_SZ])(void *data);
 enum sc_state {
     IDLE,
     FETCHING,
-    TERM
+    TERM,
+    STOP
 };
 
 int8_t scan(struct ringbuffer *buff, struct message *msg);
