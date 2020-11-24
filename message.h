@@ -4,12 +4,16 @@
 #include <stdint.h>
 #include "ringbuffer.h"
 #include "uart.h"
+#include "chksum.h"
 
-#define MSG_SZ 8
-#define CALLBACK_TABLE_SZ 64
-#define PREAMBLE 0xAA
-#define TERMINATOR 0x55
-#define NAK 0xCC
+#define MSG_SZ              8
+#define CALLBACK_TABLE_SZ   64
+#define PREAMBLE            0xAA
+#define TERMINATOR          0x55
+#define NAK                 0xCC
+
+#define ERROR_INVALID_PREAMBLE  -1
+#define ERROR_FSM_FAULT         -2
 
 struct message
 {
@@ -20,9 +24,9 @@ struct message
 
 enum messgage_id {
     NULL_MSG,
-    GPIO_SET_PIN_MODE,
-    GPIO_SET_PIN_OUT,
-    GPIO_READ_PIN,
+    GPIO_SET_MODE,
+    GPIO_SET_PIN,
+    GPIO_GET_PIN,
     SET_PWM_DUTY_T0_A,
     SET_PWM_DUTY_T0_B,
     SET_PWM_DUTY_T1_A,
@@ -34,7 +38,7 @@ enum messgage_id {
     PID_SET_KD
 };
 
-void (*callback_func[CALLBACK_TABLE_SZ])(uint8_t *data);
+extern void (*callback_func[CALLBACK_TABLE_SZ])(void *data);
 
 enum sc_state {
     IDLE,
@@ -42,7 +46,7 @@ enum sc_state {
     TERM
 };
 
-void scan(struct ringbuffer *buff, struct message *msg);
+int8_t scan(struct ringbuffer *buff, struct message *msg);
 void dispatch(struct message *msg);
     
 #endif

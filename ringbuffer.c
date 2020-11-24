@@ -30,9 +30,9 @@ rb_getc(char* c, struct ringbuffer* buff){
 		*c = buff->data[buff->tail];
 		buff->tail = (buff->tail + 1) % buff->size;
 		--(buff->cnt);
-		return 0;
+		return 1;
 	} else {
-		return -1;
+		return 0;
 	}
 }
 

@@ -1,7 +1,6 @@
 #ifndef _RINGBUFFER_H
 #define _RINGBUFFER_H
-#define FALSE 0
-#define TRUE  1
+
 #define ERROR -1
 
 /* this implementation uses a boolean full flag instead of count*/

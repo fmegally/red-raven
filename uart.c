@@ -18,7 +18,7 @@ void UART_init(uart_t* base, uint32_t baud, uint8_t parity, uint8_t byte_size )
 	return;
 }
 
-static
+static inline
 void UART_wait_TX(const uart_t* base)
 {
 	while(!(base->UCSRnA & (1 << UDREn)));
