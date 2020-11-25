@@ -2,12 +2,13 @@
 #define H_MESSAGE
 
 #include <stdint.h>
+#include <stddef.h>
 #include "ringbuffer.h"
 #include "uart.h"
 #include "chksum.h"
 
 #define MSG_SZ              8
-#define CALLBACK_TABLE_SZ   64
+#define CALLBACK_TABLE_SZ   32
 #define PREAMBLE            0xAA
 #define TERMINATOR          0x55
 #define ACK                 0x06
@@ -36,16 +37,9 @@ enum messgage_id {
     PID_SET_KD
 };
 
-void callback_gpio_set_mode(void* data);
-void callback_gpio_set_pin(void* data);
-void callback_gpio_get_pin(void* data);
-void callback_set_pwm_duty(void* data);
-void callback_echo_msg(void* data);
-void callback_set_kp(void* data);
-void callback_set_ki(void* data);
-void callback_set_kd(void* data);
 
-extern void (*callback_func[CALLBACK_TABLE_SZ])(void *data);
+typedef void (*callback_func_t)(void *data);
+
 
 enum sc_state {
     IDLE,
@@ -54,7 +48,7 @@ enum sc_state {
     STOP
 };
 
-int8_t scan(struct ringbuffer *buff, struct message *msg);
-void dispatch(struct message *msg);
+int8_t process_message(struct ringbuffer *buff);
+
     
 #endif
