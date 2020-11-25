@@ -49,7 +49,7 @@ int8_t scan(struct ringbuffer *buff, struct message *msg)
     }
 }
 
-void dispatch(struct message * msg, )
+void dispatch(struct message * msg )
 {
 
     return;

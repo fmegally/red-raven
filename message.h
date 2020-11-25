@@ -36,7 +36,6 @@ enum messgage_id {
     PID_SET_KD
 };
 
-void 
 void callback_gpio_set_mode(void* data);
 void callback_gpio_set_pin(void* data);
 void callback_gpio_get_pin(void* data);
