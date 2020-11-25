@@ -42,8 +42,8 @@ struct ringbuffer {
 int rb_init( struct ringbuffer* buff, unsigned char buff_size);
 int rb_putc(const char *c, struct ringbuffer *buff);
 int rb_getc(char *c, struct ringbuffer *buff);
+int rb_getblock(struct ringbuffer *buff, char *block, unsigned int size);
 int rb_isempty(const struct ringbuffer *buff);
 int rb_isfull(const struct ringbuffer *buff);
-int rb_getblock(struct ringbuffer *buff, char *block, unsigned int size);
 int rb_flush(struct ringbuffer *buff);
 #endif

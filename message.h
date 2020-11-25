@@ -29,16 +29,22 @@ enum messgage_id {
     GPIO_SET_MODE,
     GPIO_SET_PIN,
     GPIO_GET_PIN,
-    SET_PWM_DUTY_T0_A,
-    SET_PWM_DUTY_T0_B,
-    SET_PWM_DUTY_T1_A,
-    SET_PWM_DUTY_T1_B,
-    SET_PWM_DUTY_T1_C,
+    SET_PWM_DUTY,
     ECHO_MSG,
     PID_SET_KP,
     PID_SET_KI,
     PID_SET_KD
 };
+
+void 
+void callback_gpio_set_mode(void* data);
+void callback_gpio_set_pin(void* data);
+void callback_gpio_get_pin(void* data);
+void callback_set_pwm_duty(void* data);
+void callback_echo_msg(void* data);
+void callback_set_kp(void* data);
+void callback_set_ki(void* data);
+void callback_set_kd(void* data);
 
 extern void (*callback_func[CALLBACK_TABLE_SZ])(void *data);
 

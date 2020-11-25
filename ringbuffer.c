@@ -2,7 +2,8 @@
 #include <stdlib.h>
 
 int
-rb_init(struct ringbuffer* buff, unsigned char buff_size){
+rb_init(struct ringbuffer* buff, unsigned char buff_size)
+{
 	buff->data = (unsigned char *) malloc(buff_size * sizeof(unsigned char));
 	if (buff->data == NULL) return -1;
 	buff->size = buff_size;
@@ -13,7 +14,8 @@ rb_init(struct ringbuffer* buff, unsigned char buff_size){
 }
 
 int
-rb_putc(const char* c, struct ringbuffer* buff){
+rb_putc(const char* c, struct ringbuffer* buff)
+{
 	if (buff->cnt < buff->size){
 		buff->data[buff->head] = *c;
 		buff->head = (buff->head + 1) % buff->size;
@@ -25,7 +27,8 @@ rb_putc(const char* c, struct ringbuffer* buff){
 }
 
 int
-rb_getc(char* c, struct ringbuffer* buff){
+rb_getc(char* c, struct ringbuffer* buff)
+{
 	if (buff->cnt > 0){
 		*c = buff->data[buff->tail];
 		buff->tail = (buff->tail + 1) % buff->size;
@@ -54,13 +57,24 @@ rb_getblock(struct ringbuffer *buff, char *block, unsigned int size)
 }
 
 int
-rb_isempty(const struct ringbuffer *buff){
+rb_isempty(const struct ringbuffer *buff)
+{
 	return buff->cnt;
 }
 
 int
-rb_isfull(const struct ringbuffer *buff){
+rb_isfull(const struct ringbuffer *buff)
+{
 	return buff->cnt == buff->size;
+}
+
+int
+rb_flush(struct ringbuffer *buff)
+{
+	buff->cnt = 0;
+	buff->head = 0;
+	buff->tail = 0;
+	return 0;
 }
 
 //================================================================================

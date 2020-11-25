@@ -1,5 +1,17 @@
 #include "message.h"
 
+void (*callback_func[CALLBACK_TABLE_SZ])(void *data) = 
+{
+    [1] = callback_gpio_set_mode,
+    callback_gpio_set_pin,
+    callback_gpio_get_pin,
+    callback_set_pwm_duty,
+    callback_echo_msg,
+    callback_set_kp,
+    callback_set_ki,
+    callback_set_kd
+};
+
 int8_t scan(struct ringbuffer *buff, struct message *msg)
 {
     static uint8_t n = 0;
@@ -22,7 +34,7 @@ int8_t scan(struct ringbuffer *buff, struct message *msg)
                     continue;
 
                 case TERM:
-                    if (c == TERMINATOR && chksum((uint8_t *)msg, sizeof(*msg)))
+                    if (c == TERMINATOR && !chksum((uint8_t *)msg, sizeof(*msg)))
                     {
                         state = STOP;
                         UART_putc(UART0, ACK);
@@ -37,7 +49,8 @@ int8_t scan(struct ringbuffer *buff, struct message *msg)
     }
 }
 
-void dispatch(struct message *msg)
+void dispatch(struct message * msg, )
 {
+
     return;
 }
