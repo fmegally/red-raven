@@ -4,11 +4,13 @@
 #include <stdint.h>
 #include <stddef.h>
 #include "ringbuffer.h"
+#ifndef TESTING
 #include "uart.h"
+#endif // TESTING
 #include "chksum.h"
 
 #define MSG_SZ              8
-#define CALLBACK_TABLE_SZ   32
+#define HANDLERS_TABLE_SZ   32
 #define PREAMBLE            0xAA
 #define TERMINATOR          0x55
 #define ACK                 0x06
@@ -38,8 +40,8 @@ enum messgage_id {
 };
 
 
-typedef void (*callback_func_t)(void *data);
-
+typedef void (*handler_func_t)(void *data);
+extern handler_func_t handler_table[HANDLERS_TABLE_SZ];
 
 enum sc_state {
     IDLE,
@@ -49,6 +51,10 @@ enum sc_state {
 };
 
 int8_t process_message(struct ringbuffer *buff);
+void dispatch(struct message *msg, handler_func_t table[]);
 
+#ifdef TESTING
+void print_message(struct message *msg);
+#endif
     
 #endif
