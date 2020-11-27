@@ -1,6 +1,8 @@
 #include "message.h"
 #include <stdio.h>
 
+#define SCAN_MAX_TRIALS 10
+
 /* this section is for the handler functions that correspond to each message type (ID)*/
 static
 void handler_gpio_set_mode(void* data)
@@ -116,6 +118,8 @@ int8_t scan(struct ringbuffer *buff, struct message *msg)
     static uint8_t n = 0;
     static enum sc_state state = IDLE;
     unsigned char c;
+
+    int trials = 0;
      
     while(state != STOP)
     {
@@ -171,6 +175,7 @@ int8_t scan(struct ringbuffer *buff, struct message *msg)
                     break;
             }
         } else {
+            if(++trials > SCAN_MAX_TRIALS) state = STOP;
             #ifdef TESTING
                 printf("no char returned from buffer.\n");
             #endif
