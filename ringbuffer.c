@@ -14,7 +14,7 @@ rb_init(struct ringbuffer* buff, unsigned char buff_size)
 }
 
 int
-rb_putc(const char* c, struct ringbuffer* buff)
+rb_putc(const unsigned char* c, struct ringbuffer* buff)
 {
 	if (buff->cnt < buff->size){
 		buff->data[buff->head] = *c;
@@ -27,7 +27,7 @@ rb_putc(const char* c, struct ringbuffer* buff)
 }
 
 int
-rb_getc(char* c, struct ringbuffer* buff)
+rb_getc(unsigned char* c, struct ringbuffer* buff)
 {
 	if (buff->cnt > 0){
 		*c = buff->data[buff->tail];
@@ -40,7 +40,7 @@ rb_getc(char* c, struct ringbuffer* buff)
 }
 
 int
-rb_getblock(struct ringbuffer *buff, char *block, unsigned int size)
+rb_getblock(struct ringbuffer *buff, unsigned char *block, unsigned int size)
 {
 	if (size <= buff->cnt){
 		unsigned int i;

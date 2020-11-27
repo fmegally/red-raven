@@ -11,10 +11,10 @@
 
 #define MSG_SZ              8
 #define HANDLERS_TABLE_SZ   32
-#define PREAMBLE            0xAA
-#define TERMINATOR          0x55
-#define ACK                 0x06
-#define NAK                 0x15
+#define PREAMBLE            0xAAU
+#define TERMINATOR          0x55U
+#define ACK                 0x06U
+#define NAK                 0x15U
 
 
 #define ERROR_INVALID_PREAMBLE  -1
@@ -52,7 +52,6 @@ enum sc_state {
 
 int8_t process_message(struct ringbuffer *buff);
 void dispatch(struct message *msg, handler_func_t table[]);
-
 #ifdef TESTING
 void print_message(struct message *msg);
 #endif

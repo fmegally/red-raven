@@ -12,7 +12,8 @@ void handler_gpio_set_mode(void* data)
     };
     
     struct frame *gpio_args = (struct frame *)data;
-
+    
+    printf("\n");
     printf("function call :: handler_gpio_set_mode()\n");
     printf("GPIO port:\t%x\n", gpio_args->gpio_port);
     printf("GPIO DDR:\t%x\n", gpio_args->gpio_ddr);
@@ -31,6 +32,7 @@ void handler_gpio_set_pin(void* data)
     
     struct frame *gpio_args = (struct frame *)data;
 
+    printf("\n");
     printf("function call :: handler_gpio_set_pin()\n");
     printf("GPIO port:\t%x\n", gpio_args->gpio_port);
     printf("GPIO pin:\t%x\n", gpio_args->gpio_pin);
@@ -49,6 +51,7 @@ void handler_gpio_get_pin(void* data)
     
     struct frame *gpio_args = (struct frame *)data;
 
+    printf("\n");
     printf("function call :: handler_gpio_get_pin()\n");
     printf("GPIO port:\t%x\n", gpio_args->gpio_port);
     printf("GPIO pin:\t%x\n", gpio_args->gpio_pin);
@@ -58,6 +61,7 @@ void handler_gpio_get_pin(void* data)
 static
 void handler_set_pwm_duty(void* data)
 {
+    printf("\n");
     printf("function call :: handler_set_pwm_duty()\n");
     return;
 }
@@ -65,6 +69,7 @@ void handler_set_pwm_duty(void* data)
 static
 void handler_echo_msg(void* data)
 {
+    printf("\n");
     printf("function call :: handler_echo_msg()\n");
     return;
 }
@@ -72,6 +77,7 @@ void handler_echo_msg(void* data)
 static
 void handler_set_kp(void* data)
 {
+    printf("\n");
     printf("function call :: handler_set_kp()\n");
     return;
 }
@@ -79,6 +85,7 @@ void handler_set_kp(void* data)
 static
 void handler_set_ki(void* data)
 {
+    printf("\n");
     printf("function call :: handler_set_ki()\n");
     return;
 }
@@ -86,6 +93,7 @@ void handler_set_ki(void* data)
 static
 void handler_set_kd(void* data)
 {
+    printf("\n");
     printf("function call :: handler_set_kd()\n");
     return;
 }
@@ -107,7 +115,7 @@ int8_t scan(struct ringbuffer *buff, struct message *msg)
 {
     static uint8_t n = 0;
     static enum sc_state state = IDLE;
-    char c;
+    unsigned char c;
      
     while(state != STOP)
     {
@@ -117,11 +125,18 @@ int8_t scan(struct ringbuffer *buff, struct message *msg)
             {
                 case IDLE:
                     if(c == PREAMBLE) state = FETCHING;
+                    #ifdef TESTING
+                        printf("IDLE state\n");
+                    #endif
                     continue;
 
                 case FETCHING:
                     ((uint8_t*)msg)[n++] = c;
                     if (n == sizeof(struct message)) state = TERM;
+                    #ifdef TESTING
+                        printf("FETCHING state\n");
+                        printf("%d\n",n);
+                    #endif
                     continue;
 
                 case TERM:
@@ -129,15 +144,15 @@ int8_t scan(struct ringbuffer *buff, struct message *msg)
                     {
                         state = STOP;
                         #ifdef TESTING
-                        printf("Message TERM received and chksum passed.\n");
+                            printf("Message TERM received and chksum passed.\n");
                         #endif
                         #ifndef TESTING
-                        UART_putc(UART0, ACK);
+                            UART_putc(UART0, ACK);
                         #endif
                     } else {
                         state = IDLE;
                         #ifdef TESTING
-                        printf("Message TERM missed or chksum passed.\n");
+                            printf("Message TERM missed or chksum passed.\n");
                         #endif
                         #ifndef TESTING
                         UART_putc(UART0, NAK);
@@ -145,10 +160,20 @@ int8_t scan(struct ringbuffer *buff, struct message *msg)
                     }
                 
                 case STOP:
+                    #ifdef TESTING
+                        printf("STOP state reached.\n");
+                    #endif
+                    break;
                 default:
+                    #ifdef TESTING
+                        printf("default exit. no match\n");
+                    #endif
                     break;
             }
         } else {
+            #ifdef TESTING
+                printf("no char returned from buffer.\n");
+            #endif
             continue;
         }
     }
@@ -170,12 +195,12 @@ int8_t process_message(struct ringbuffer *buff)
 }
 
 #ifdef TESTING
-void print_message(struct message *msg)
-{
-    printf("Message ID :\t\t0x%02X\n",msg->id);
-    printf("Message Data :\t\t");
-    for (int i = 0; i < MSG_SZ; i++) printf("0x%02X ",msg->data[i]);
-    printf("\n");
-    printf("Message Checksum :\t0x%02X\n",msg->chksum);
-}
+    void print_message(struct message *msg)
+    {
+        printf("Message ID :\t\t%02X\n",msg->id);
+        printf("Message Data :\t\t");
+        for (int i = 0; i < MSG_SZ; i++) printf("%02X ",msg->data[i]);
+        printf("\n");
+        printf("Message Checksum :\t%02X\n",msg->chksum);
+    }
 #endif
