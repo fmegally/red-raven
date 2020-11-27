@@ -143,6 +143,10 @@ int8_t scan(struct ringbuffer *buff, struct message *msg)
                         UART_putc(UART0, NAK);
                         #endif
                     }
+                
+                case STOP:
+                default:
+                    break;
             }
         } else {
             continue;
