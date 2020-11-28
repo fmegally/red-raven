@@ -8,17 +8,40 @@ struct gpio {
 	uint8_t PORT;
 };
 
-extern volatile struct gpio* const GPIO_A;
-extern volatile struct gpio* const GPIO_B;
-extern volatile struct gpio* const GPIO_C;
-extern volatile struct gpio* const GPIO_D;
-extern volatile struct gpio* const GPIO_E;
-extern volatile struct gpio* const GPIO_F;
-extern volatile struct gpio* const GPIO_G;
-extern volatile struct gpio* const GPIO_H;
-extern volatile struct gpio* const GPIO_J;
-extern volatile struct gpio* const GPIO_K;
-extern volatile struct gpio* const GPIO_L;
+typedef struct gpio gpio_t
+
+#define GPIO_PORTA_ADD (0x20)
+#define GPIO_PORTA     ((gpio_t *) GPIO_PORTA_ADD)
+
+#define GPIO_PORTB_ADD (0x23)
+#define GPIO_PORTB     ((gpio_t *) GPIO_PORTB_ADD)
+
+#define GPIO_PORTC_ADD (0x26)
+#define GPIO_PORTC     ((gpio_t *) GPIO_PORTC_ADD)
+
+#define GPIO_PORTD_ADD (0x29)
+#define GPIO_PORTD     ((gpio_t *) GPIO_PORTD_ADD)
+
+#define GPIO_PORTE_ADD (0x2C)
+#define GPIO_PORTE     ((gpio_t *) GPIO_PORTE_ADD)
+
+#define GPIO_PORTF_ADD (0x2F)
+#define GPIO_PORTF     ((gpio_t *) GPIO_PORTF_ADD)
+
+#define GPIO_PORTG_ADD (0x32)
+#define GPIO_PORTG     ((gpio_t *) GPIO_PORTG_ADD)
+
+#define GPIO_PORTH_ADD (0x100)
+#define GPIO_PORTH     ((gpio_t *) GPIO_PORTH_ADD)
+
+#define GPIO_PORTJ_ADD (0x103)
+#define GPIO_PORTJ     ((gpio_t *) GPIO_PORTJ_ADD)
+
+#define GPIO_PORTK_ADD (0x106)
+#define GPIO_PORTK     ((gpio_t *) GPIO_PORTK_ADD)
+
+#define GPIO_PORTL_ADD (0x109)
+#define GPIO_PORTL     ((gpio_t *) GPIO_PORTL_ADD)
 
 void gpio_setmode(volatile struct gpio* const port, uint8_t mode);
 void gpio_pwrite(volatile struct gpio* const port, uint8_t value);

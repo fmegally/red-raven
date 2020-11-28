@@ -5,6 +5,7 @@
 #include <stddef.h>
 #include "ringbuffer.h"
 #ifndef TESTING
+#include "gpio.h"
 #include "uart.h"
 #endif // TESTING
 #include "chksum.h"

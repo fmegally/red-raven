@@ -1,5 +1,4 @@
 #include "message.h"
-#include "message.h"
 #include <stdio.h>
 
 #define SCAN_MAX_TRIALS 1000
@@ -18,41 +17,109 @@ void handler_gpio_set_mode(void* data)
     };
     
     struct frame *gpio_args = (struct frame *)data;
+    #ifdef TESTING
+    printf("\nfunction call :: handler_gpio_set_mode()\n");
+    #endif
 
     switch (gpio_args->gpio_port)
     {
         case('A'):
+            #ifdef TESTING
+            printf("\nPort:\t%c\nDDR:\t\02X\n");
+            #endif
+            #ifndef TESTING
             gpio_setmode(GPIO_A, gpio_args->gpio_ddr);
+            #endif
             break;
+
         case('B'):
+            #ifdef TESTING
+            printf("\nPort:\t%c\nDDR:\t\02X\n");
+            #endif
+            #ifndef TESTING
             gpio_setmode(GPIO_B, gpio_args->gpio_ddr);
+            #endif
             break;
+
         case('C'):
+            #ifdef TESTING
+            printf("\nPort:\t%c\nDDR:\t\02X\n");
+            #endif
+            #ifndef TESTING
             gpio_setmode(GPIO_C, gpio_args->gpio_ddr);
+            #endif
             break;
+
         case('D'):
+            #ifdef TESTING
+            printf("\nPort:\t%c\nDDR:\t\02X\n");
+            #endif
+            #ifndef TESTING
             gpio_setmode(GPIO_D, gpio_args->gpio_ddr);
+            #endif
             break;
+
         case('E'):
+            #ifdef TESTING
+            printf("\nPort:\t%c\nDDR:\t\02X\n");
+            #endif
+            #ifndef TESTING
             gpio_setmode(GPIO_E, gpio_args->gpio_ddr);
+            #endif
             break;
+
         case('F'):
+            #ifdef TESTING
+            printf("\nPort:\t%c\nDDR:\t\02X\n");
+            #endif
+            #ifndef TESTING
             gpio_setmode(GPIO_F, gpio_args->gpio_ddr);
+            #endif
             break;
+
         case('G'):
+            #ifdef TESTING
+            printf("\nPort:\t%c\nDDR:\t\02X\n");
+            #endif
+            #ifndef TESTING
             gpio_setmode(GPIO_G, gpio_args->gpio_ddr);
+            #endif
             break;
+
         case('H'):
+            #ifdef TESTING
+            printf("\nPort:\t%c\nDDR:\t\02X\n");
+            #endif
+            #ifndef TESTING
             gpio_setmode(GPIO_H, gpio_args->gpio_ddr);
+            #endif
             break;
+
         case('J'):
+            #ifdef TESTING
+            printf("\nPort:\t%c\nDDR:\t\02X\n");
+            #endif
+            #ifndef TESTING
             gpio_setmode(GPIO_J, gpio_args->gpio_ddr);
+            #endif
             break;
+
         case('K'):
+            #ifdef TESTING
+            printf("\nPort:\t%c\nDDR:\t\02X\n");
+            #endif
+            #ifndef TESTING
             gpio_setmode(GPIO_K, gpio_args->gpio_ddr);
+            #endif
             break;
+
         case('L'):
+            #ifdef TESTING
+            printf("\nPort:\t%c\nDDR:\t\02X\n");
+            #endif
+            #ifndef TESTING
             gpio_setmode(GPIO_L, gpio_args->gpio_ddr);
+            #endif
             break;
         default:
             break;
@@ -60,7 +127,6 @@ void handler_gpio_set_mode(void* data)
         
 //:CLEANUP   
     printf("\n");
-    printf("function call :: handler_gpio_set_mode()\n");
     printf("GPIO port:\t%x\n", gpio_args->gpio_port);
     printf("GPIO DDR:\t%x\n", gpio_args->gpio_ddr);
 //CLEANUP
