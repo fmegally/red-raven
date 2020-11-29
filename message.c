@@ -1,11 +1,27 @@
 #include "message.h"
 #include <stdio.h>
 
-#define SCAN_MAX_TRIALS 1000
+#define SCAN_MAX_TRIALS 10
 
 
 /* this section is for the handler functions that correspond to each message type (ID)*/
 /* should probably me moved to its own handler files                                  */
+
+unsigned char atonum(char c)
+{
+	if (c >= 'a' && c <= 'z')
+	{
+		return (c - 'a') + 1;
+	}
+	else if (c >= 'A' && c <= 'Z')
+	{
+		return (c - 'A') + 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
 
 static
 void handler_gpio_set_mode(void* data)
@@ -20,6 +36,7 @@ void handler_gpio_set_mode(void* data)
     #ifdef TESTING
     printf("\nfunction call :: handler_gpio_set_mode()\n");
     #endif
+
 
     switch (gpio_args->gpio_port)
     {
@@ -125,11 +142,11 @@ void handler_gpio_set_mode(void* data)
             break;
     }
         
-//:CLEANUP   
+//autoremove  
     printf("\n");
     printf("GPIO port:\t%x\n", gpio_args->gpio_port);
     printf("GPIO DDR:\t%x\n", gpio_args->gpio_ddr);
-//CLEANUP
+//endautoremove
     return;
 }
 
@@ -140,16 +157,119 @@ void handler_gpio_set_pin(void* data)
     {
         uint8_t gpio_port;
         uint8_t gpio_pin;
-        uint8_t gpio_value;
     };
     
     struct frame *gpio_args = (struct frame *)data;
 
     printf("\n");
     printf("function call :: handler_gpio_set_pin()\n");
+
+    switch (gpio_args->gpio_port)
+    {
+        case('A'):
+            #ifdef TESTING
+            printf("\nPort:\t%c\npin no:\t\02X\n");
+            #endif
+            #ifndef TESTING
+            gpio_setbit(GPIO_A, gpio_args->gpio_pin);
+            #endif
+            break;
+
+        case('B'):
+            #ifdef TESTING
+            printf("\nPort:\t%c\npin no:\t\02X\n");
+            #endif
+            #ifndef TESTING
+            gpio_setbit(GPIO_B, gpio_args->gpio_pin);
+            #endif
+            break;
+
+        case('C'):
+            #ifdef TESTING
+            printf("\nPort:\t%c\npin no:\t\02X\n");
+            #endif
+            #ifndef TESTING
+            gpio_setbit(GPIO_C, gpio_args->gpio_pin);
+            #endif
+            break;
+
+        case('D'):
+            #ifdef TESTING
+            printf("\nPort:\t%c\npin no:\t\02X\n");
+            #endif
+            #ifndef TESTING
+            gpio_setbit(GPIO_D, gpio_args->gpio_pin);
+            #endif
+            break;
+
+        case('E'):
+            #ifdef TESTING
+            printf("\nPort:\t%c\npin no:\t\02X\n");
+            #endif
+            #ifndef TESTING
+            gpio_setbit(GPIO_E, gpio_args->gpio_pin);
+            #endif
+            break;
+
+        case('F'):
+            #ifdef TESTING
+            printf("\nPort:\t%c\npin no:\t\02X\n");
+            #endif
+            #ifndef TESTING
+            gpio_setbit(GPIO_F, gpio_args->gpio_pin);
+            #endif
+            break;
+
+        case('G'):
+            #ifdef TESTING
+            printf("\nPort:\t%c\npin no:\t\02X\n");
+            #endif
+            #ifndef TESTING
+            gpio_setbit(GPIO_G, gpio_args->gpio_pin);
+            #endif
+            break;
+
+        case('H'):
+            #ifdef TESTING
+            printf("\nPort:\t%c\npin no:\t\02X\n");
+            #endif
+            #ifndef TESTING
+            gpio_setbit(GPIO_H, gpio_args->gpio_pin);
+            #endif
+            break;
+
+        case('J'):
+            #ifdef TESTING
+            printf("\nPort:\t%c\npin no:\t\02X\n");
+            #endif
+            #ifndef TESTING
+            gpio_setbit(GPIO_J, gpio_args->gpio_pin);
+            #endif
+            break;
+
+        case('K'):
+            #ifdef TESTING
+            printf("\nPort:\t%c\npin no:\t\02X\n");
+            #endif
+            #ifndef TESTING
+            gpio_setbit(GPIO_K, gpio_args->gpio_pin);
+            #endif
+            break;
+
+        case('L'):
+            #ifdef TESTING
+            printf("\nPort:\t%c\npin no:\t\02X\n");
+            #endif
+            #ifndef TESTING
+            gpio_setbit(GPIO_L, gpio_args->gpio_pin);
+            #endif
+            break;
+        default:
+            break;
+    }
+
     printf("GPIO port:\t%x\n", gpio_args->gpio_port);
     printf("GPIO pin:\t%x\n", gpio_args->gpio_pin);
-    printf("GPIO value:\t%x\n", gpio_args->gpio_value);
     return;
 }
 
@@ -166,6 +286,110 @@ void handler_gpio_get_pin(void* data)
 
     printf("\n");
     printf("function call :: handler_gpio_get_pin()\n");
+    switch (gpio_args->gpio_port)
+    {
+        case('A'):
+            #ifdef TESTING
+            printf("\nPort:\t%c\npin no:\t\02X\n");
+            #endif
+            #ifndef TESTING
+            gpio_getbit(GPIO_A, gpio_args->gpio_pin);
+            #endif
+            break;
+
+        case('B'):
+            #ifdef TESTING
+            printf("\nPort:\t%c\npin no:\t\02X\n");
+            #endif
+            #ifndef TESTING
+            gpio_getbit(GPIO_B, gpio_args->gpio_pin);
+            #endif
+            break;
+
+        case('C'):
+            #ifdef TESTING
+            printf("\nPort:\t%c\npin no:\t\02X\n");
+            #endif
+            #ifndef TESTING
+            gpio_getbit(GPIO_C, gpio_args->gpio_pin);
+            #endif
+            break;
+
+        case('D'):
+            #ifdef TESTING
+            printf("\nPort:\t%c\npin no:\t\02X\n");
+            #endif
+            #ifndef TESTING
+            gpio_getbit(GPIO_D, gpio_args->gpio_pin);
+            #endif
+            break;
+
+        case('E'):
+            #ifdef TESTING
+            printf("\nPort:\t%c\npin no:\t\02X\n");
+            #endif
+            #ifndef TESTING
+            gpio_getbit(GPIO_E, gpio_args->gpio_pin);
+            #endif
+            break;
+
+        case('F'):
+            #ifdef TESTING
+            printf("\nPort:\t%c\npin no:\t\02X\n");
+            #endif
+            #ifndef TESTING
+            gpio_getbit(GPIO_F, gpio_args->gpio_pin);
+            #endif
+            break;
+
+        case('G'):
+            #ifdef TESTING
+            printf("\nPort:\t%c\npin no:\t\02X\n");
+            #endif
+            #ifndef TESTING
+            gpio_getbit(GPIO_G, gpio_args->gpio_pin);
+            #endif
+            break;
+
+        case('H'):
+            #ifdef TESTING
+            printf("\nPort:\t%c\npin no:\t\02X\n");
+            #endif
+            #ifndef TESTING
+            gpio_getbit(GPIO_H, gpio_args->gpio_pin);
+            #endif
+            break;
+
+        case('J'):
+            #ifdef TESTING
+            printf("\nPort:\t%c\npin no:\t\02X\n");
+            #endif
+            #ifndef TESTING
+            gpio_getbit(GPIO_J, gpio_args->gpio_pin);
+            #endif
+            break;
+
+        case('K'):
+            #ifdef TESTING
+            printf("\nPort:\t%c\npin no:\t\02X\n");
+            #endif
+            #ifndef TESTING
+            gpio_getbit(GPIO_K, gpio_args->gpio_pin);
+            #endif
+            break;
+
+        case('L'):
+            #ifdef TESTING
+            printf("\nPort:\t%c\npin no:\t\02X\n");
+            #endif
+            #ifndef TESTING
+            gpio_getbit(GPIO_L, gpio_args->gpio_pin);
+            #endif
+            break;
+        default:
+            break;
+    }
+
     printf("GPIO port:\t%x\n", gpio_args->gpio_port);
     printf("GPIO pin:\t%x\n", gpio_args->gpio_pin);
     return;
@@ -277,11 +501,13 @@ int8_t scan(struct ringbuffer *buff, struct message *msg)
                 case STOP:
                     #ifdef TESTING
                         printf("STOP state reached.\n");
+			return 0;
                     #endif
                     break;
                 default:
                     #ifdef TESTING
-                        printf("default exit. no match\n");
+                        printf("exception: error scanning incoming characters\n");
+			return -1;
                     #endif
                     break;
             }
@@ -293,7 +519,7 @@ int8_t scan(struct ringbuffer *buff, struct message *msg)
             continue;
         }
     }
-    return 0;
+    return -1;
 }
 
 void dispatch(struct message *msg, handler_func_t table[])
@@ -304,10 +530,14 @@ void dispatch(struct message *msg, handler_func_t table[])
 
 int8_t process_message(struct ringbuffer *buff)
 {
+
     struct message msg;
-    scan(buff, &msg);
-    dispatch(&msg,handler_table);
-    return 0;
+    if (scan(buff, &msg) == 0){
+    	dispatch(&msg,handler_table);
+    	return 0;
+    } else {
+	return -1;
+    }
 }
 
 #ifdef TESTING

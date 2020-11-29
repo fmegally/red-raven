@@ -1,14 +1,16 @@
-#include <avr/io.h>
+#ifndef TESTING
+#	include <avr/io.h>
+#endif
 #include <stdint.h>
 #include "bits.h"
 
 struct gpio {
-	uint8_t PIN;
-	uint8_t DDR;
-	uint8_t PORT;
+	volatile uint8_t PIN;
+	volatile uint8_t DDR;
+	volatile uint8_t PORT;
 };
 
-typedef struct gpio gpio_t
+typedef struct gpio gpio_t;
 
 #define GPIO_PORTA_ADD (0x20)
 #define GPIO_PORTA     ((gpio_t *) GPIO_PORTA_ADD)
@@ -43,11 +45,24 @@ typedef struct gpio gpio_t
 #define GPIO_PORTL_ADD (0x109)
 #define GPIO_PORTL     ((gpio_t *) GPIO_PORTL_ADD)
 
-void gpio_setmode(volatile struct gpio* const port, uint8_t mode);
-void gpio_pwrite(volatile struct gpio* const port, uint8_t value);
-uint8_t gpio_pread(volatile struct gpio* const port);
+gpio_t *gpio_ports_list [] = {GPIO_PORTA,
+			     GPIO_PORTB,
+                             GPIO_PORTC,
+			     GPIO_PORTD,
+			     GPIO_PORTE,
+			     GPIO_PORTF,
+			     GPIO_PORTG,
+			     GPIO_PORTH,
+			     GPIO_PORTJ,
+		  	     GPIO_PORTK,
+		             GPIO_PORTL};
 
-void gpio_setbit(volatile struct gpio* const port, uint8_t pin);
-void gpio_clrbit(volatile struct gpio* const port, uint8_t pin);
-uint8_t gpio_getbit(volatile struct gpio* const port, uint8_t pin);
-void gpio_flipbit(volatile struct gpio* const port, uint8_t pin);
+
+void gpio_setmode(gpio_t* const port, uint8_t mode);
+void gpio_pwrite(gpio_t* const port, uint8_t value);
+uint8_t gpio_pread(gpio_t* const port);
+
+void gpio_setbit(gpio_t* const port, uint8_t pin);
+void gpio_clrbit(gpio_t* const port, uint8_t pin);
+uint8_t gpio_getbit(gpio_t* const port, uint8_t pin);
+void gpio_flipbit(gpio_t* const port, uint8_t pin);

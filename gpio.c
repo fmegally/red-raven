@@ -1,52 +1,40 @@
 #include "gpio.h"
 
-volatile struct gpio * const __attribute__ ((packed)) GPIO_A= (volatile struct gpio *) &PINA;
-volatile struct gpio * const __attribute__ ((packed)) GPIO_B= (volatile struct gpio *) &PINB;
-volatile struct gpio * const __attribute__ ((packed)) GPIO_C= (volatile struct gpio *) &PINC;
-volatile struct gpio * const __attribute__ ((packed)) GPIO_D= (volatile struct gpio *) &PIND;
-volatile struct gpio * const __attribute__ ((packed)) GPIO_E= (volatile struct gpio *) &PINE;
-volatile struct gpio * const __attribute__ ((packed)) GPIO_F= (volatile struct gpio *) &PINF;
-volatile struct gpio * const __attribute__ ((packed)) GPIO_G= (volatile struct gpio *) &PING;
-volatile struct gpio * const __attribute__ ((packed)) GPIO_H= (volatile struct gpio *) &PINH;
-volatile struct gpio * const __attribute__ ((packed)) GPIO_J= (volatile struct gpio *) &PINJ;
-volatile struct gpio * const __attribute__ ((packed)) GPIO_K= (volatile struct gpio *) &PINK;
-volatile struct gpio * const __attribute__ ((packed)) GPIO_L= (volatile struct gpio *) &PINL;
-
-void gpio_setmode(volatile struct gpio* const port, uint8_t mode)
+void gpio_setmode(gpio_t* const port, uint8_t mode)
 {
 	port->DDR = mode;
 	return;
 }
 
-void gpio_pwrite(volatile struct gpio* const port, uint8_t value)
+void gpio_pwrite(gpio_t* const port, uint8_t value)
 {
 	port->PORT = value;
 	return;
 }
 
-uint8_t gpio_pread(volatile struct gpio* const port)
+uint8_t gpio_pread(gpio_t* const port)
 {
 	return port->PIN;
 }
 
-void gpio_setbit(volatile struct gpio* const port, uint8_t pin)
+void gpio_setbit(gpio_t* const port, uint8_t pin)
 {
 	BITSET(port->PORT, pin);
 	return;
 }
 
-void gpio_clrbit(volatile struct gpio* const port, uint8_t pin)
+void gpio_clrbit(gpio_t* const port, uint8_t pin)
 {
 	BITCLR(port->PORT, pin);
 	return;
 }
 
-uint8_t gpio_getbit(volatile struct gpio* const port, uint8_t pin)
+uint8_t gpio_getbit(gpio_t* const port, uint8_t pin)
 {
 	return BITGET(port->PORT, pin);
 }
 
-void gpio_flipbit(volatile struct gpio* const port, uint8_t pin)
+void gpio_flipbit(gpio_t* const port, uint8_t pin)
 {
 	BITFLIP(port->PORT, pin);
 	return;

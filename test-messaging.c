@@ -23,7 +23,7 @@ int main (int argc, char* argv[])
     PRINTLN;
 
     c = TERMINATOR;
-   //rb_putc(&c, &rx_buffer);
+    rb_putc(&c, &rx_buffer);
     /*
     unsigned char t;
     while (rb_getc(&t,&rx_buffer))

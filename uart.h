@@ -15,12 +15,12 @@
 
 struct uart
 {
-	uint8_t  UCSRnA;
-	uint8_t  UCSRnB;
-	uint8_t  UCSRnC;
+	volatile uint8_t  UCSRnA;
+	volatile uint8_t  UCSRnB;
+	volatile uint8_t  UCSRnC;
 	uint8_t  _padding_0;
 	uint16_t UBRRn;
-	uint8_t  UDRn;
+	volatile uint8_t  UDRn;
 	uint8_t  _padding_1;
 };
 
