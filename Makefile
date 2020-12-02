@@ -1,20 +1,19 @@
 CC = avr-gcc
 CFLAGS = -Wall
-OBJ = main.o gpio.o
+OBJ = main.o uart.o
 MCU = atmega2560
 PROG = USBtiny
-DEPS = $(wildcard *.h)
-TARGET = main
+#DEPS = $(wildcard *.h)
+TARGET = out
 
-$(TARGET).hex:$(TARGET).bin
-	avr-objcopy -j .text -j .data -O ihex $< $@ 
+$(TARGET).hex: $(TARGET).bin
+	avr-objcopy -j .text -j .data -O ihex $< $@
 
-$(TARGET).bin:$(OBJ)
+$(TARGET).bin: $(OBJ)
 	$(CC) -o $@ $(OBJ) -mmcu=$(MCU) $(CFLAGS)
 
-%.o:%.c $(DEPS)
+%.o: %.c
 	$(CC) -c -o $@ $< -mmcu=$(MCU) $(CFLAGS)
-
 
 .PHONY:clean
 clean:
@@ -23,5 +22,5 @@ clean:
 	rm *.bin
 
 flash:
-	avrdude -p $(MCU) -c $(PROG) -U flash:w:main.hex:i
+	avrdude -p $(MCU) -c $(PROG) -U flash:w:$(TARGET).hex:i
 

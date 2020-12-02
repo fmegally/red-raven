@@ -1,7 +1,7 @@
 #include "message.h"
 #include <stdio.h>
 
-#define SCAN_MAX_TRIALS 10
+#define SCAN_MAX_TRIALS 20
 
 
 /* this section is for the handler functions that correspond to each message type (ID)*/
@@ -482,20 +482,23 @@ int8_t scan(struct ringbuffer *buff, struct message *msg)
                     if (c == TERMINATOR && !chksum((uint8_t *)msg, sizeof(*msg)))
                     {
                         state = STOP;
+			n = 0;
                         #ifdef TESTING
                             printf("Message TERM received and chksum passed.\n");
                         #endif
                         #ifndef TESTING
                             UART_putc(UART0, ACK);
                         #endif
+			break;
                     } else {
                         state = IDLE;
                         #ifdef TESTING
-                            printf("Message TERM missed or chksum passed.\n");
+                            printf("Message TERM missed or chksum failed.\n");
                         #endif
                         #ifndef TESTING
                         UART_putc(UART0, NAK);
                         #endif
+			break;
                     }
                 
                 case STOP:

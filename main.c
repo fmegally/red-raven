@@ -1,17 +1,19 @@
-#include <avr/io.h>
-#include <stdint.h>
-#include "gpio.h"
+#include <stdio.h>
+#include "uart.h"
 
-int main (void)
+int main(int argc, char *argv[])
 {
-	uint32_t d;
-	gpio_setmode(GPIO_F, 0xFF);
-	while(1){
-		gpio_pwrite(GPIO_F,0b11111110);
-		for(d = 0; d<100;d++);
-		gpio_pwrite(GPIO_F,0b11111111);
-		for(d = 0; d<1600;d++);
+	char buffer[32];
+	UART_init(UART0, 9600, UART_PARITY_NONE, UART_CHAR_SIZE_8BIT);
+	UART_print(UART0, "This software is property of FOXDYNE LLC.\n");
+
+	for(int x = 0; x<100; x++){
+		sprintf(buffer,"%d\n",x);
+		UART_print(UART0, buffer);
 	}
+	
+	UART_print(UART0, "=========================================\n");
+	while(1);
 	return 0;
 }
 

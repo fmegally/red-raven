@@ -13,31 +13,6 @@
 #include <avr/io.h>
 #include "common.h"
 
-struct uart
-{
-	volatile uint8_t  UCSRnA;
-	volatile uint8_t  UCSRnB;
-	volatile uint8_t  UCSRnC;
-	uint8_t  _padding_0;
-	uint16_t UBRRn;
-	volatile uint8_t  UDRn;
-	uint8_t  _padding_1;
-};
-
-typedef struct uart uart_t;
-
-#define UART0_BASE_ADD	 (0xC0)
-#define UART0 		 ((uart_t *) UART0_BASE_ADD)
-
-#define UART1_BASE_ADD	 (0xC8)
-#define UART1 		 ((uart_t *) UART0_BASE_ADD)
-
-#define UART2_BASE_ADD	 (0xD0)
-#define UART2 		 ((uart_t *) UART0_BASE_ADD)
-
-#define UART3_BASE_ADD	 (0x130)
-#define UART3 		 ((uart_t *) UART0_BASE_ADD)
-
 #define RXCn    7
 #define TXCn    6
 #define UDREn   5
@@ -78,9 +53,33 @@ typedef struct uart uart_t;
 #define UART_CHAR_SIZE_8BIT 3
 #define UART_CHAR_SIZE_9BIT 7
 
+struct uart
+{
+	volatile uint8_t  UCSRnA;
+	volatile uint8_t  UCSRnB;
+	volatile uint8_t  UCSRnC;
+	uint8_t  _padding_0;
+	uint16_t UBRRn;
+	volatile uint8_t  UDRn;
+	uint8_t  _padding_1;
+};
+
+typedef struct uart uart_t;
+
+#define UART0_BASE_ADD	 (0xC0)
+#define UART0 		 ((uart_t *) UART0_BASE_ADD)
+
+#define UART1_BASE_ADD	 (0xC8)
+#define UART1 		 ((uart_t *) UART0_BASE_ADD)
+
+#define UART2_BASE_ADD	 (0xD0)
+#define UART2 		 ((uart_t *) UART0_BASE_ADD)
+
+#define UART3_BASE_ADD	 (0x130)
+#define UART3 		 ((uart_t *) UART0_BASE_ADD)
 
 void UART_init(uart_t* base, uint32_t baud, uint8_t parity, uint8_t byte_size );
-void UART_read(uart_t* base, const uint8_t* buff, uint8_t len);
+void UART_read(uart_t* base, uint8_t* buff, uint8_t len);
 void UART_write(uart_t* base, const uint8_t* buff, uint8_t len);
 void UART_print(uart_t* base, const char* str);
 void UART_putc(uart_t* base, char c);
