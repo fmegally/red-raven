@@ -1,5 +1,5 @@
-#ifndef _RINGBUFFER_H
-#define _RINGBUFFER_H
+#ifndef RINGBUFFER_H_
+#define RINGBUFFER_H_
 
 #define ERROR -1
 

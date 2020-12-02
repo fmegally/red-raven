@@ -1,5 +1,5 @@
-#ifndef H_MESSAGE
-#define H_MESSAGE
+#ifndef MESSAGE_H_
+#define MESSAGE_H_
 
 #include <stdint.h>
 #include <stddef.h>
@@ -53,8 +53,6 @@ enum sc_state {
 
 int8_t process_message(struct ringbuffer *buff);
 void dispatch(struct message *msg, handler_func_t table[]);
-#ifdef TESTING
 void print_message(struct message *msg);
-#endif
     
 #endif

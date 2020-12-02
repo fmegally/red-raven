@@ -1,6 +1,7 @@
-#ifndef TESTING
-#	include <avr/io.h>
-#endif
+#ifndef GPIO_H_
+#define GPIO_H_
+
+#include <avr/io.h>
 #include <stdint.h>
 #include "bits.h"
 
@@ -45,17 +46,7 @@ typedef struct gpio gpio_t;
 #define GPIO_PORTL_ADD (0x109)
 #define GPIO_PORTL     ((gpio_t *) GPIO_PORTL_ADD)
 
-gpio_t *gpio_ports_list [] = {GPIO_PORTA,
-			     GPIO_PORTB,
-                             GPIO_PORTC,
-			     GPIO_PORTD,
-			     GPIO_PORTE,
-			     GPIO_PORTF,
-			     GPIO_PORTG,
-			     GPIO_PORTH,
-			     GPIO_PORTJ,
-		  	     GPIO_PORTK,
-		             GPIO_PORTL};
+extern gpio_t *gpio_ports_list [];
 
 
 void gpio_setmode(gpio_t* const port, uint8_t mode);
@@ -66,3 +57,5 @@ void gpio_setbit(gpio_t* const port, uint8_t pin);
 void gpio_clrbit(gpio_t* const port, uint8_t pin);
 uint8_t gpio_getbit(gpio_t* const port, uint8_t pin);
 void gpio_flipbit(gpio_t* const port, uint8_t pin);
+
+#endif
