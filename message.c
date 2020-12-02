@@ -1,3 +1,4 @@
+#include "uart.h"
 #include "message.h"
 #include <stdio.h>
 
@@ -7,7 +8,7 @@
 /* this section is for the handler functions that correspond to each message type (ID)*/
 /* should probably me moved to its own handler files                                  */
 
-unsigned char atonum(char c)
+unsigned char atord(char c)
 {
 	if (c >= 'a' && c <= 'z')
 	{
@@ -33,120 +34,57 @@ void handler_gpio_set_mode(void* data)
     };
     
     struct frame *gpio_args = (struct frame *)data;
-    #ifdef TESTING
-    printf("\nfunction call :: handler_gpio_set_mode()\n");
-    #endif
-
+    UART_print("\nfunction call :: handler_gpio_set_mode()\n");
 
     switch (gpio_args->gpio_port)
     {
         case('A'):
-            #ifdef TESTING
-            printf("\nPort:\t%c\nDDR:\t\02X\n");
-            #endif
-            #ifndef TESTING
             gpio_setmode(GPIO_A, gpio_args->gpio_ddr);
-            #endif
             break;
 
         case('B'):
-            #ifdef TESTING
-            printf("\nPort:\t%c\nDDR:\t\02X\n");
-            #endif
-            #ifndef TESTING
             gpio_setmode(GPIO_B, gpio_args->gpio_ddr);
-            #endif
             break;
 
         case('C'):
-            #ifdef TESTING
-            printf("\nPort:\t%c\nDDR:\t\02X\n");
-            #endif
-            #ifndef TESTING
             gpio_setmode(GPIO_C, gpio_args->gpio_ddr);
-            #endif
             break;
 
         case('D'):
-            #ifdef TESTING
-            printf("\nPort:\t%c\nDDR:\t\02X\n");
-            #endif
-            #ifndef TESTING
             gpio_setmode(GPIO_D, gpio_args->gpio_ddr);
-            #endif
             break;
 
         case('E'):
-            #ifdef TESTING
-            printf("\nPort:\t%c\nDDR:\t\02X\n");
-            #endif
-            #ifndef TESTING
             gpio_setmode(GPIO_E, gpio_args->gpio_ddr);
-            #endif
             break;
 
         case('F'):
-            #ifdef TESTING
-            printf("\nPort:\t%c\nDDR:\t\02X\n");
-            #endif
-            #ifndef TESTING
             gpio_setmode(GPIO_F, gpio_args->gpio_ddr);
-            #endif
             break;
 
         case('G'):
-            #ifdef TESTING
-            printf("\nPort:\t%c\nDDR:\t\02X\n");
-            #endif
-            #ifndef TESTING
             gpio_setmode(GPIO_G, gpio_args->gpio_ddr);
-            #endif
             break;
 
         case('H'):
-            #ifdef TESTING
-            printf("\nPort:\t%c\nDDR:\t\02X\n");
-            #endif
-            #ifndef TESTING
             gpio_setmode(GPIO_H, gpio_args->gpio_ddr);
-            #endif
             break;
 
         case('J'):
-            #ifdef TESTING
-            printf("\nPort:\t%c\nDDR:\t\02X\n");
-            #endif
-            #ifndef TESTING
             gpio_setmode(GPIO_J, gpio_args->gpio_ddr);
-            #endif
             break;
 
         case('K'):
-            #ifdef TESTING
-            printf("\nPort:\t%c\nDDR:\t\02X\n");
-            #endif
-            #ifndef TESTING
             gpio_setmode(GPIO_K, gpio_args->gpio_ddr);
-            #endif
             break;
 
         case('L'):
-            #ifdef TESTING
-            printf("\nPort:\t%c\nDDR:\t\02X\n");
-            #endif
-            #ifndef TESTING
             gpio_setmode(GPIO_L, gpio_args->gpio_ddr);
-            #endif
             break;
         default:
             break;
     }
         
-//autoremove  
-    printf("\n");
-    printf("GPIO port:\t%x\n", gpio_args->gpio_port);
-    printf("GPIO DDR:\t%x\n", gpio_args->gpio_ddr);
-//endautoremove
     return;
 }
 
@@ -167,109 +105,52 @@ void handler_gpio_set_pin(void* data)
     switch (gpio_args->gpio_port)
     {
         case('A'):
-            #ifdef TESTING
-            printf("\nPort:\t%c\npin no:\t\02X\n");
-            #endif
-            #ifndef TESTING
             gpio_setbit(GPIO_A, gpio_args->gpio_pin);
-            #endif
             break;
 
         case('B'):
-            #ifdef TESTING
-            printf("\nPort:\t%c\npin no:\t\02X\n");
-            #endif
-            #ifndef TESTING
             gpio_setbit(GPIO_B, gpio_args->gpio_pin);
-            #endif
             break;
 
         case('C'):
-            #ifdef TESTING
-            printf("\nPort:\t%c\npin no:\t\02X\n");
-            #endif
-            #ifndef TESTING
             gpio_setbit(GPIO_C, gpio_args->gpio_pin);
-            #endif
             break;
 
         case('D'):
-            #ifdef TESTING
-            printf("\nPort:\t%c\npin no:\t\02X\n");
-            #endif
-            #ifndef TESTING
             gpio_setbit(GPIO_D, gpio_args->gpio_pin);
-            #endif
             break;
 
         case('E'):
-            #ifdef TESTING
-            printf("\nPort:\t%c\npin no:\t\02X\n");
-            #endif
-            #ifndef TESTING
             gpio_setbit(GPIO_E, gpio_args->gpio_pin);
-            #endif
             break;
 
         case('F'):
-            #ifdef TESTING
-            printf("\nPort:\t%c\npin no:\t\02X\n");
-            #endif
-            #ifndef TESTING
             gpio_setbit(GPIO_F, gpio_args->gpio_pin);
-            #endif
             break;
 
         case('G'):
-            #ifdef TESTING
-            printf("\nPort:\t%c\npin no:\t\02X\n");
-            #endif
-            #ifndef TESTING
             gpio_setbit(GPIO_G, gpio_args->gpio_pin);
-            #endif
             break;
 
         case('H'):
-            #ifdef TESTING
-            printf("\nPort:\t%c\npin no:\t\02X\n");
-            #endif
-            #ifndef TESTING
             gpio_setbit(GPIO_H, gpio_args->gpio_pin);
-            #endif
             break;
 
         case('J'):
-            #ifdef TESTING
-            printf("\nPort:\t%c\npin no:\t\02X\n");
-            #endif
-            #ifndef TESTING
             gpio_setbit(GPIO_J, gpio_args->gpio_pin);
-            #endif
             break;
 
         case('K'):
-            #ifdef TESTING
-            printf("\nPort:\t%c\npin no:\t\02X\n");
-            #endif
-            #ifndef TESTING
             gpio_setbit(GPIO_K, gpio_args->gpio_pin);
-            #endif
             break;
 
         case('L'):
-            #ifdef TESTING
-            printf("\nPort:\t%c\npin no:\t\02X\n");
-            #endif
-            #ifndef TESTING
             gpio_setbit(GPIO_L, gpio_args->gpio_pin);
-            #endif
             break;
         default:
             break;
     }
 
-    printf("GPIO port:\t%x\n", gpio_args->gpio_port);
-    printf("GPIO pin:\t%x\n", gpio_args->gpio_pin);
     return;
 }
 
@@ -289,149 +170,87 @@ void handler_gpio_get_pin(void* data)
     switch (gpio_args->gpio_port)
     {
         case('A'):
-            #ifdef TESTING
-            printf("\nPort:\t%c\npin no:\t\02X\n");
-            #endif
-            #ifndef TESTING
             gpio_getbit(GPIO_A, gpio_args->gpio_pin);
-            #endif
             break;
 
         case('B'):
-            #ifdef TESTING
-            printf("\nPort:\t%c\npin no:\t\02X\n");
-            #endif
-            #ifndef TESTING
             gpio_getbit(GPIO_B, gpio_args->gpio_pin);
-            #endif
             break;
 
         case('C'):
-            #ifdef TESTING
-            printf("\nPort:\t%c\npin no:\t\02X\n");
-            #endif
-            #ifndef TESTING
             gpio_getbit(GPIO_C, gpio_args->gpio_pin);
-            #endif
             break;
 
         case('D'):
-            #ifdef TESTING
-            printf("\nPort:\t%c\npin no:\t\02X\n");
-            #endif
-            #ifndef TESTING
             gpio_getbit(GPIO_D, gpio_args->gpio_pin);
-            #endif
             break;
 
         case('E'):
-            #ifdef TESTING
-            printf("\nPort:\t%c\npin no:\t\02X\n");
-            #endif
-            #ifndef TESTING
             gpio_getbit(GPIO_E, gpio_args->gpio_pin);
-            #endif
             break;
 
         case('F'):
-            #ifdef TESTING
-            printf("\nPort:\t%c\npin no:\t\02X\n");
-            #endif
-            #ifndef TESTING
             gpio_getbit(GPIO_F, gpio_args->gpio_pin);
-            #endif
             break;
 
         case('G'):
-            #ifdef TESTING
-            printf("\nPort:\t%c\npin no:\t\02X\n");
-            #endif
-            #ifndef TESTING
             gpio_getbit(GPIO_G, gpio_args->gpio_pin);
-            #endif
             break;
 
         case('H'):
-            #ifdef TESTING
-            printf("\nPort:\t%c\npin no:\t\02X\n");
-            #endif
-            #ifndef TESTING
             gpio_getbit(GPIO_H, gpio_args->gpio_pin);
-            #endif
             break;
 
         case('J'):
-            #ifdef TESTING
-            printf("\nPort:\t%c\npin no:\t\02X\n");
-            #endif
-            #ifndef TESTING
             gpio_getbit(GPIO_J, gpio_args->gpio_pin);
-            #endif
             break;
 
         case('K'):
-            #ifdef TESTING
-            printf("\nPort:\t%c\npin no:\t\02X\n");
-            #endif
-            #ifndef TESTING
             gpio_getbit(GPIO_K, gpio_args->gpio_pin);
-            #endif
             break;
 
         case('L'):
-            #ifdef TESTING
-            printf("\nPort:\t%c\npin no:\t\02X\n");
-            #endif
-            #ifndef TESTING
             gpio_getbit(GPIO_L, gpio_args->gpio_pin);
-            #endif
             break;
         default:
             break;
     }
 
-    printf("GPIO port:\t%x\n", gpio_args->gpio_port);
-    printf("GPIO pin:\t%x\n", gpio_args->gpio_pin);
     return;
 }
 
 static
 void handler_set_pwm_duty(void* data)
 {
-    printf("\n");
-    printf("function call :: handler_set_pwm_duty()\n");
+    UART_print("function call :: handler_set_pwm_duty()\n");
     return;
 }
 
 static
 void handler_echo_msg(void* data)
 {
-    printf("\n");
-    printf("function call :: handler_echo_msg()\n");
+    UART_print("function call :: handler_echo_msg()\n");
     return;
 }
 
 static
 void handler_set_kp(void* data)
 {
-    printf("\n");
-    printf("function call :: handler_set_kp()\n");
+    UART_print("function call :: handler_set_kp()\n");
     return;
 }
 
 static
 void handler_set_ki(void* data)
 {
-    printf("\n");
-    printf("function call :: handler_set_ki()\n");
+    UART_print("function call :: handler_set_ki()\n");
     return;
 }
 
 static
 void handler_set_kd(void* data)
 {
-    printf("\n");
-    printf("function call :: handler_set_kd()\n");
+    UART_print("function call :: handler_set_kd()\n");
     return;
 }
 
@@ -465,7 +284,7 @@ int8_t scan(struct ringbuffer *buff, struct message *msg)
                 case IDLE:
                     if(c == PREAMBLE) state = FETCHING;
                     #ifdef TESTING
-                        printf("IDLE state\n");
+                        UART_print("IDLE state\n");
                     #endif
                     continue;
 
@@ -473,8 +292,7 @@ int8_t scan(struct ringbuffer *buff, struct message *msg)
                     ((uint8_t*)msg)[n++] = c;
                     if (n == sizeof(struct message)) state = TERM;
                     #ifdef TESTING
-                        printf("FETCHING state\n");
-                        printf("%d\n",n);
+                        UART_print("FETCHING state\n");
                     #endif
                     continue;
 
@@ -484,32 +302,28 @@ int8_t scan(struct ringbuffer *buff, struct message *msg)
                         state = STOP;
 			n = 0;
                         #ifdef TESTING
-                            printf("Message TERM received and chksum passed.\n");
+                            UART_print("Message TERM received and chksum passed.\n");
                         #endif
-                        #ifndef TESTING
                             UART_putc(UART0, ACK);
-                        #endif
 			break;
                     } else {
                         state = IDLE;
                         #ifdef TESTING
-                            printf("Message TERM missed or chksum failed.\n");
+                            UART_print("Message TERM missed or chksum failed.\n");
                         #endif
-                        #ifndef TESTING
                         UART_putc(UART0, NAK);
-                        #endif
 			break;
                     }
                 
                 case STOP:
                     #ifdef TESTING
-                        printf("STOP state reached.\n");
+                        UART_print("STOP state reached.\n");
 			return 0;
                     #endif
                     break;
                 default:
                     #ifdef TESTING
-                        printf("exception: error scanning incoming characters\n");
+                        UART_print("exception: error scanning incoming characters\n");
 			return -1;
                     #endif
                     break;
@@ -517,7 +331,7 @@ int8_t scan(struct ringbuffer *buff, struct message *msg)
         } else {
             if(++trials > SCAN_MAX_TRIALS) state = STOP;
             #ifdef TESTING
-                printf("no char returned from buffer.\n");
+                UART_print("no char returned from buffer.\n");
             #endif
             continue;
         }
@@ -543,13 +357,20 @@ int8_t process_message(struct ringbuffer *buff)
     }
 }
 
-#ifdef TESTING
-    void print_message(struct message *msg)
+void print_message(struct message *msg)
+{
+    char buffer[32];
+    sprintf(buffer,"Message ID :\t\t%02X\n",msg->id);
+    UART_print(buffer);
+    UART_print("Message Data :\t\t");
+    for (int i = 0; i < MSG_SZ; i++) 
     {
-        printf("Message ID :\t\t%02X\n",msg->id);
-        printf("Message Data :\t\t");
-        for (int i = 0; i < MSG_SZ; i++) printf("%02X ",msg->data[i]);
-        printf("\n");
-        printf("Message Checksum :\t%02X\n",msg->chksum);
+    	sprintf(buffer,"%02X ",msg->data[i]);
+    	UART_print(buffer);
+    	UART_print("\n");
     }
-#endif
+
+    sprintf(buffer,"Message Checksum :\t%02X\n",msg->chksum);
+    UART_print(buffer);
+    return;
+}

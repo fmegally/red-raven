@@ -23,12 +23,12 @@ void UART_wait_RX(const uart_t* base)
 
 void UART_init(uart_t* base, uint32_t baud, uint8_t parity, uint8_t byte_size )
 {
-	base->UBRRn  = (F_OSC/(16 * baud)) - 1;                                       //set baud rate countdown register. formula for UBRR register is in atmel data sheet
-	base->UCSRnB = (~(0x01 << UCSZn2) & base->UCSRnB) | (byte_size & 0x04);             //byte size settings are split over 2 registers so it has to be done in 2 steps
-	base->UCSRnC = (~(0x03 << UPMn0) & base->UCSRnC) | (parity << UPMn0);               //select parity
+	base->UBRRn  = (F_OSC/(16 * baud)) - 1;							//set baud rate countdown register. formula for UBRR register is in atmel data sheet
+	base->UCSRnB = (~(0x01 << UCSZn2) & base->UCSRnB) | (byte_size & 0x04);			//byte size settings are split over 2 registers so it has to be done in 2 steps
+	base->UCSRnC = (~(0x03 << UPMn0) & base->UCSRnC) | (parity << UPMn0);			//select parity
 	base->UCSRnC = (~(0x03 << UCSZn0) & base->UCSRnC) | ((byte_size & 0x03) << UCSZn0);
-	base->UCSRnB |= (1 << RXENn) | (1 << TXENn);                                  //enable serial TX and RX
-	base->UCSRnB |= (1 << RXCIEn);                                                //enable RX complete interrupt
+	base->UCSRnB |= (1 << RXENn) | (1 << TXENn);						//enable serial TX and RX
+	base->UCSRnB |= (1 << RXCIEn);								//enable RX complete interrupt
 	return;
 }
 
