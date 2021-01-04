@@ -1,8 +1,11 @@
 #include <stdio.h>
 #include "uart.h"
+#include "gpio.h"
+#include <avr/io.h>
 
 int main(int argc, char *argv[])
 {
+		/*
 	char buffer[32];
 	UART_init(UART0, 9600, UART_PARITY_NONE, UART_CHAR_SIZE_8BIT);
 	UART_print(UART0, "This software is property of FOXDYNE LLC.\n");
@@ -13,6 +16,29 @@ int main(int argc, char *argv[])
 	}
 	
 	UART_print(UART0, "=========================================\n");
+*/
+
+	gpio_setmode(GPIO_PORTF,0xFF);
+	unsigned char x = 1;
+	
+	while (1)
+	{
+		while(x < 128)
+		{
+			gpio_pwrite(GPIO_PORTF,~x);
+			for(unsigned long int i = 0; i<80000; i++);
+			x = x << 1;
+		}
+
+		while(x > 1)
+		{
+			gpio_pwrite(GPIO_PORTF,~x);
+			for(unsigned long int i = 0; i<80000; i++);
+			x = x >> 1;
+		}
+
+	}
+
 	while(1);
 	return 0;
 }

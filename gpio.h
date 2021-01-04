@@ -1,6 +1,8 @@
 #ifndef GPIO_H_
 #define GPIO_H_
 
+#include <stddef.h>
+
 #include <avr/io.h>
 #include <stdint.h>
 #include "bits.h"
@@ -12,6 +14,8 @@ struct gpio {
 };
 
 typedef struct gpio gpio_t;
+
+extern gpio_t *gpio_ports_list [];
 
 #define GPIO_PORTA_ADD (0x20)
 #define GPIO_PORTA     ((gpio_t *) GPIO_PORTA_ADD)
@@ -45,8 +49,6 @@ typedef struct gpio gpio_t;
 
 #define GPIO_PORTL_ADD (0x109)
 #define GPIO_PORTL     ((gpio_t *) GPIO_PORTL_ADD)
-
-extern gpio_t *gpio_ports_list [];
 
 
 void gpio_setmode(gpio_t* const port, uint8_t mode);

@@ -1,6 +1,6 @@
 CC = avr-gcc
 CFLAGS = -Wall
-OBJ = main.o uart.o message.o gpio.o chksum.o ringbuffer.o
+OBJ = main.o gpio.o
 MCU = atmega2560
 PROG = USBtiny
 #DEPS = $(wildcard *.h)
@@ -17,9 +17,9 @@ $(TARGET).bin: $(OBJ)
 
 .PHONY:clean
 clean:
-	rm *.o 
-	rm *.hex
-	rm *.bin
+	rm -f *.o 
+	rm -f *.hex
+	rm -f *.bin
 
 flash:
 	avrdude -p $(MCU) -c $(PROG) -U flash:w:$(TARGET).hex:i

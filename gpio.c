@@ -2,15 +2,16 @@
 
 gpio_t *gpio_ports_list [] = {GPIO_PORTA,
 			     GPIO_PORTB,
-                             GPIO_PORTC,
+                 GPIO_PORTC,
 			     GPIO_PORTD,
 			     GPIO_PORTE,
 			     GPIO_PORTF,
 			     GPIO_PORTG,
 			     GPIO_PORTH,
+			     NULL,
 			     GPIO_PORTJ,
 		  	     GPIO_PORTK,
-		             GPIO_PORTL};
+	             GPIO_PORTL};
 
 void gpio_setmode(gpio_t* const port, uint8_t mode)
 {
