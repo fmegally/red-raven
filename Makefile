@@ -1,6 +1,6 @@
 CC = avr-gcc
 CFLAGS = -Wall
-OBJ = main.o gpio.o
+OBJ = main.o uart.o message.o ringbuffer.o gpio.o chksum.o
 MCU = atmega2560
 PROG = USBtiny
 #DEPS = $(wildcard *.h)

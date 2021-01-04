@@ -37,8 +37,12 @@ enum messgage_id {
     ECHO_MSG,
     PID_SET_KP,
     PID_SET_KI,
-    PID_SET_KD
+    PID_SET_KD,
+	RESPONSE_SUCCESS.
+	RESPONSE_ERROR
 };
+
+
 
 
 typedef void (*handler_func_t)(void *data);
@@ -54,5 +58,9 @@ enum sc_state {
 int8_t process_message(struct ringbuffer *buff);
 void dispatch(struct message *msg, handler_func_t table[]);
 void print_message(struct message *msg);
+
+void wrap_message(uint8_t id, const uint8_t *data);
+int8_t send_message(struct message *msg);
+
     
 #endif
