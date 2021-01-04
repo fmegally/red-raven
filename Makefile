@@ -15,11 +15,11 @@ $(TARGET).bin: $(OBJ)
 %.o: %.c
 	$(CC) -c -o $@ $< -mmcu=$(MCU) $(CFLAGS)
 
+flash:
+	avrdude -p $(MCU) -c $(PROG) -U flash:w:$(TARGET).hex:i
+
 .PHONY:clean
 clean:
 	rm -f *.o 
 	rm -f *.hex
 	rm -f *.bin
-
-flash:
-	avrdude -p $(MCU) -c $(PROG) -U flash:w:$(TARGET).hex:i
