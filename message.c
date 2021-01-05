@@ -30,11 +30,29 @@ void handler_gpio_set_mode(void* data)
         uint8_t gpio_port;
         uint8_t gpio_ddr;
     };
-    
+	UART_print(UART0,"function call:handler_gpio_set_mode");
     struct frame *gpio_args = (struct frame *)data;
-	gpio_t port = gpio_ports_list[gpio_args->gpio_port];
+	gpio_t* const port = gpio_ports_list[gpio_args->gpio_port];
     gpio_setmode(port, gpio_args->gpio_ddr);
         
+    return;
+}
+
+static
+void handler_gpio_clr_pin(void* data)
+{
+        struct frame
+    {
+        uint8_t gpio_port_ix;
+        uint8_t gpio_pin;
+    };
+    
+    struct frame *gpio_args = (struct frame *)data;
+
+	UART_print(UART0,"function call:handler_gpio_clr_pin");
+	gpio_t* const port = gpio_ports_list[gpio_args->gpio_port_ix];
+    gpio_clrbit(port, gpio_args->gpio_pin);
+
     return;
 }
 
@@ -49,7 +67,8 @@ void handler_gpio_set_pin(void* data)
     
     struct frame *gpio_args = (struct frame *)data;
 
-	gpio_t port = gpio_ports_list[gpio_args->gpio_port_ix];
+	UART_print(UART0,"function call:handler_gpio_set_pin");
+	gpio_t* const port = gpio_ports_list[gpio_args->gpio_port_ix];
     gpio_setbit(port, gpio_args->gpio_pin);
 
     return;
@@ -64,8 +83,9 @@ void handler_gpio_get_pin(void* data)
         uint8_t gpio_pin;
     };
     
+	UART_print(UART0,"function call:handler_gpio_get_pin");
     struct frame *gpio_args = (struct frame *)data;
-	gpio_t port = gpio_ports_list[gpio_args->gpio_port_ix];
+	gpio_t* const  port = gpio_ports_list[gpio_args->gpio_port_ix];
     uint8_t res = gpio_getbit(port, gpio_args->gpio_pin);
 
     return;
@@ -110,6 +130,7 @@ handler_func_t handler_table[HANDLERS_TABLE_SZ] =
 {
     [1] = handler_gpio_set_mode,
     handler_gpio_set_pin,
+	handler_gpio_clr_pin,
     handler_gpio_get_pin,
     handler_set_pwm_duty,
     handler_echo_msg,
@@ -121,11 +142,11 @@ handler_func_t handler_table[HANDLERS_TABLE_SZ] =
 static
 int8_t scan(struct ringbuffer *buff, struct message *msg)
 {
-    static uint8_t n = 0;
-    static enum sc_state state = IDLE;
+    uint8_t n = 0;
+    enum sc_state state = IDLE;
     unsigned char c;
 
-    int trials = 0;
+    //int trials = 0;
      
     while(state != STOP)
     {
@@ -152,43 +173,43 @@ int8_t scan(struct ringbuffer *buff, struct message *msg)
                     if (c == TERMINATOR && !chksum((uint8_t *)msg, sizeof(*msg)))
                     {
                         state = STOP;
-			n = 0;
+			            n = 0;
                         #ifdef TESTING
-                            UART_print(UART0, "Message TERM received and chksum passed.\n");
+                        UART_print(UART0, "Message TERM received and chksum passed.\n");
                         #endif
-                            UART_putc(UART0, ACK);
-			break;
+                        UART_putc(UART0, ACK);
+						continue;
                     } else {
                         state = IDLE;
+						n = 0;
                         #ifdef TESTING
-                            UART_print(UART0, "Message TERM missed or chksum failed.\n");
+                        UART_print(UART0, "Message TERM missed or chksum failed.\n");
                         #endif
                         UART_putc(UART0, NAK);
-			break;
+						continue;
                     }
                 
-                case STOP:
-                    #ifdef TESTING
-                        UART_print(UART0, "STOP state reached.\n");
-			return 0;
-                    #endif
-                    break;
+                //case STOP:
+                //    #ifdef TESTING
+                //        UART_print(UART0, "STOP state reached.\n");
+                //    #endif
+			    //    return 0;
+                    
                 default:
                     #ifdef TESTING
                         UART_print(UART0, "exception: error scanning incoming characters\n");
-			return -1;
                     #endif
-                    break;
+			        return -1;
             }
         } else {
-            if(++trials > SCAN_MAX_TRIALS) state = STOP;
+            //if(++trials > SCAN_MAX_TRIALS) state = STOP;
             #ifdef TESTING
-                UART_print(UART0, "no char returned from buffer.\n");
+//                UART_print(UART0, "no char returned from buffer.\n");
             #endif
             continue;
         }
     }
-    return -1;
+    return 0;
 }
 
 void dispatch(struct message *msg, handler_func_t table[])

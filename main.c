@@ -16,12 +16,16 @@ ISR(USART0_RX_vect)
 	return;
 }
 
-
+void init_system(){
+		rb_init(&uart_rx_buffer, 48);
+		UART_init(UART0, 9600, UART_PARITY_NONE, UART_CHAR_SIZE_8BIT);
+		sei();
+		return;
+}
 int main(int argc, char *argv[])
 {
-	rb_init(&uart_rx_buffer, 48);
-	UART_init(UART0, 9600, UART_PARITY_NONE, UART_CHAR_SIZE_8BIT);
-	sei();
+	init_system();
+	UART_print(UART0,"Init complete");
 
 	while(1){
 		process_message(&uart_rx_buffer);
