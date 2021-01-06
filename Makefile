@@ -1,5 +1,5 @@
 CC = avr-gcc
-CFLAGS = -Wall -DTESTING
+CFLAGS = -Wall
 OBJ = main.o uart.o message.o ringbuffer.o gpio.o chksum.o
 MCU = atmega2560
 PROG = atmelice_isp

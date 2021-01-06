@@ -30,7 +30,9 @@ void handler_gpio_set_mode(void* data)
         uint8_t gpio_port;
         uint8_t gpio_ddr;
     };
+	#ifdef TESTING	
 	UART_print(UART0,"function call:handler_gpio_set_mode");
+	#endif
     struct frame *gpio_args = (struct frame *)data;
 	gpio_t* const port = gpio_ports_list[gpio_args->gpio_port];
     gpio_setmode(port, gpio_args->gpio_ddr);
@@ -49,7 +51,9 @@ void handler_gpio_clr_pin(void* data)
     
     struct frame *gpio_args = (struct frame *)data;
 
+	#ifdef TESTING	
 	UART_print(UART0,"function call:handler_gpio_clr_pin");
+	#endif
 	gpio_t* const port = gpio_ports_list[gpio_args->gpio_port_ix];
     gpio_clrbit(port, gpio_args->gpio_pin);
 
@@ -67,7 +71,9 @@ void handler_gpio_set_pin(void* data)
     
     struct frame *gpio_args = (struct frame *)data;
 
+	#ifdef TESTING	
 	UART_print(UART0,"function call:handler_gpio_set_pin");
+	#endif
 	gpio_t* const port = gpio_ports_list[gpio_args->gpio_port_ix];
     gpio_setbit(port, gpio_args->gpio_pin);
 
@@ -83,7 +89,9 @@ void handler_gpio_get_pin(void* data)
         uint8_t gpio_pin;
     };
     
+	#ifdef TESTING	
 	UART_print(UART0,"function call:handler_gpio_get_pin");
+	#endif
     struct frame *gpio_args = (struct frame *)data;
 	gpio_t* const  port = gpio_ports_list[gpio_args->gpio_port_ix];
     uint8_t res = gpio_getbit(port, gpio_args->gpio_pin);
@@ -94,35 +102,45 @@ void handler_gpio_get_pin(void* data)
 static
 void handler_set_pwm_duty(void* data)
 {
+	#ifdef TESTING	
     UART_print(UART0,"function call :: handler_set_pwm_duty()\n");
+	#endif
     return;
 }
 
 static
 void handler_echo_msg(void* data)
 {
+	#ifdef TESTING	
     UART_print(UART0,"function call :: handler_echo_msg()\n");
+	#endif
     return;
 }
 
 static
 void handler_set_kp(void* data)
 {
+	#ifdef TESTING	
     UART_print(UART0,"function call :: handler_set_kp()\n");
+	#endif
     return;
 }
 
 static
 void handler_set_ki(void* data)
 {
+	#ifdef TESTING	
     UART_print(UART0,"function call :: handler_set_ki()\n");
+	#endif
     return;
 }
 
 static
 void handler_set_kd(void* data)
 {
+	#ifdef TESTING	
     UART_print(UART0,"function call :: handler_set_kd()\n");
+	#endif
     return;
 }
 
