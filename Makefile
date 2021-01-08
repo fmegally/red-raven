@@ -1,26 +1,30 @@
-CC = avr-gcc
-CFLAGS = -Wall
-OBJ = main.o uart.o message.o ringbuffer.o gpio.o chksum.o
-MCU = atmega2560
-PROG = atmelice_isp
-#PROG = USBtiny
-#DEPS = $(wildcard *.h)
-TARGET = out
+ODIR = ./build
+IDIR = ./include
+SDIR = ./src
 
-$(TARGET).hex: $(TARGET).bin
+CC = avr-gcc
+CFLAGS = -Wall -I$(IDIR)
+LIBS = -lm
+PROG = atmelice_isp
+OBJF = main.o uart.o message.o ringbuffer.o gpio.o chksum.o
+OBJ = $(patsubst %,$(ODIR)/%, $(OBJF))
+MCU = atmega2560
+#DEPS = $(wildcard *.h)
+TARGET = main
+
+$(ODIR)/$(TARGET).hex: $(ODIR)/$(TARGET).bin
 	avr-objcopy -j .text -j .data -O ihex $< $@
 
-$(TARGET).bin: $(OBJ)
+$(ODIR)/$(TARGET).bin: $(OBJ)
 	$(CC) -o $@ $(OBJ) -mmcu=$(MCU) $(CFLAGS)
 
-%.o: %.c
+$(ODIR)/%.o: $(SDIR)/%.c
 	$(CC) -c -o $@ $< -mmcu=$(MCU) $(CFLAGS)
 
 flash:
-	avrdude -p $(MCU) -c $(PROG) -U flash:w:$(TARGET).hex:i
+	avrdude -p $(MCU) -c $(PROG) -U flash:w:$(ODIR)/$(TARGET).hex:i
 
 .PHONY:clean
 clean:
-	rm -f *.o 
-	rm -f *.hex
-	rm -f *.bin
+	echo "Removing build files .."
+	@bash -c 'rm $(ODIR)/{*.o,*.hex,*.bin} && echo "Clean complete !"'

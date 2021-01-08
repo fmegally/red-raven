@@ -23,7 +23,7 @@ unsigned char atord(char c)
 }
 
 static
-void handler_gpio_set_mode(void* data)
+int8_t handler_gpio_set_mode(void* data)
 {
     struct frame
     {
@@ -33,15 +33,19 @@ void handler_gpio_set_mode(void* data)
 	#ifdef TESTING	
 	UART_print(UART0,"function call:handler_gpio_set_mode");
 	#endif
-    struct frame *gpio_args = (struct frame *)data;
+	struct frame *gpio_args = (struct frame *)data;
 	gpio_t* const port = gpio_ports_list[gpio_args->gpio_port];
-    gpio_setmode(port, gpio_args->gpio_ddr);
+	gpio_setmode(port, gpio_args->gpio_ddr);
+
+    //uint8_t buff[12] = {0xAA, 0x50, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x55};
+    //UART_write(UART0, buff, 12);
+
         
-    return;
+    return 0;
 }
 
 static
-void handler_gpio_clr_pin(void* data)
+int8_t handler_gpio_clr_pin(void* data)
 {
         struct frame
     {
@@ -55,13 +59,15 @@ void handler_gpio_clr_pin(void* data)
 	UART_print(UART0,"function call:handler_gpio_clr_pin");
 	#endif
 	gpio_t* const port = gpio_ports_list[gpio_args->gpio_port_ix];
-    gpio_clrbit(port, gpio_args->gpio_pin);
+	gpio_clrbit(port, gpio_args->gpio_pin);
 
-    return;
+	//uint8_t buff[12] = {0xAA, 0x50, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x55};
+	//UART_write(UART0, buff, 12);
+	return 0;
 }
 
 static
-void handler_gpio_set_pin(void* data)
+int8_t handler_gpio_set_pin(void* data)
 {
         struct frame
     {
@@ -75,13 +81,15 @@ void handler_gpio_set_pin(void* data)
 	UART_print(UART0,"function call:handler_gpio_set_pin");
 	#endif
 	gpio_t* const port = gpio_ports_list[gpio_args->gpio_port_ix];
-    gpio_setbit(port, gpio_args->gpio_pin);
+	gpio_setbit(port, gpio_args->gpio_pin);
 
-    return;
+	//uint8_t buff[12] = {0xAA, 0x50, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x55};
+	//UART_write(UART0, buff, 12);
+	return 0;
 }
 
 static
-void handler_gpio_get_pin(void* data)
+int8_t handler_gpio_get_pin(void* data)
 {
     struct frame
     {
@@ -92,69 +100,75 @@ void handler_gpio_get_pin(void* data)
 	#ifdef TESTING	
 	UART_print(UART0,"function call:handler_gpio_get_pin");
 	#endif
-    struct frame *gpio_args = (struct frame *)data;
+	struct frame *gpio_args = (struct frame *)data;
 	gpio_t* const  port = gpio_ports_list[gpio_args->gpio_port_ix];
-    uint8_t res = gpio_getbit(port, gpio_args->gpio_pin);
+	uint8_t res = gpio_getbit(port, gpio_args->gpio_pin);
 
-    return;
+	//uint8_t buff[12] = {0xAA, 0x50, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x55};
+	//UART_write(UART0, buff, 12);
+	return res;
 }
 
 static
-void handler_set_pwm_duty(void* data)
+int8_t handler_set_pwm_duty(void* data)
 {
 	#ifdef TESTING	
     UART_print(UART0,"function call :: handler_set_pwm_duty()\n");
 	#endif
-    return;
+    return 0;
 }
 
 static
-void handler_echo_msg(void* data)
+int8_t handler_echo_msg(void* data)
 {
 	#ifdef TESTING	
-    UART_print(UART0,"function call :: handler_echo_msg()\n");
+	UART_print(UART0,"function call :: handler_echo_msg()\n");
 	#endif
-    return;
+	return 0;
 }
 
 static
-void handler_set_kp(void* data)
+int8_t handler_set_kp(void* data)
 {
 	#ifdef TESTING	
     UART_print(UART0,"function call :: handler_set_kp()\n");
 	#endif
-    return;
+    return 0;
 }
 
 static
-void handler_set_ki(void* data)
+int8_t handler_set_ki(void* data)
 {
 	#ifdef TESTING	
-    UART_print(UART0,"function call :: handler_set_ki()\n");
+	UART_print(UART0,"function call :: handler_set_ki()\n");
 	#endif
-    return;
+	return 0;
 }
 
 static
-void handler_set_kd(void* data)
+int8_t handler_set_kd(void* data)
 {
 	#ifdef TESTING	
     UART_print(UART0,"function call :: handler_set_kd()\n");
 	#endif
-    return;
+    return 0;
 }
+
+/* end of handlers implementation */
+
+
 
 handler_func_t handler_table[HANDLERS_TABLE_SZ] = 
 {
-    [1] = handler_gpio_set_mode,
-    handler_gpio_set_pin,
+	[1] = handler_gpio_set_mode,
+	handler_gpio_set_pin,
 	handler_gpio_clr_pin,
-    handler_gpio_get_pin,
-    handler_set_pwm_duty,
-    handler_echo_msg,
-    handler_set_kp,
-    handler_set_ki,
-    handler_set_kd
+	handler_gpio_get_pin,
+	handler_set_pwm_duty,
+	handler_echo_msg,
+	handler_set_kp,
+	handler_set_ki,
+	handler_set_kd
 };
 
 static
@@ -195,7 +209,7 @@ int8_t scan(struct ringbuffer *buff, struct message *msg)
                         #ifdef TESTING
                         UART_print(UART0, "Message TERM received and chksum passed.\n");
                         #endif
-                        UART_putc(UART0, ACK);
+                        //UART_putc(UART0, ACK);
 						continue;
                     } else {
                         state = IDLE;
@@ -203,7 +217,7 @@ int8_t scan(struct ringbuffer *buff, struct message *msg)
                         #ifdef TESTING
                         UART_print(UART0, "Message TERM missed or chksum failed.\n");
                         #endif
-                        UART_putc(UART0, NAK);
+                        //UART_putc(UART0, NAK);
 						continue;
                     }
                 
@@ -230,17 +244,43 @@ int8_t scan(struct ringbuffer *buff, struct message *msg)
     return 0;
 }
 
-void dispatch(struct message *msg, handler_func_t table[])
+static
+void msg_append_chksum(struct message* msg)
 {
-    (*(table[msg->id]))(msg->data);
-    return;
+	uint8_t t[sizeof(struct message) - sizeof(uint8_t)];
+	msg->chksum = chksum(t,sizeof(t));
+	return;
+}
+
+int8_t dispatch(struct message *msg, handler_func_t table[])
+{
+	int8_t r = (*(table[msg->id]))(msg->data);
+	return r;
 }
 
 int8_t process_message(struct ringbuffer *buff)
 {
-    struct message msg;
-    if (scan(buff, &msg) == 0){
-    	dispatch(&msg,handler_table);
+    struct message tmsg;
+    int8_t r;
+    if (scan(buff, &tmsg) == 0){
+    	r = dispatch(&tmsg,handler_table);
+	if( r == 0){
+		tmsg.id = RESPONSE_SUCCESS;
+		int8_t i;
+		for(i = 0;i < MSG_SZ; i++) tmsg.data[i] = 0;
+		msg_append_chksum(&tmsg);
+		UART_putc(UART0,PREAMBLE);
+		UART_write(UART0, (uint8_t*)&tmsg,10);
+		UART_putc(UART0,TERMINATOR);
+	} else {
+		tmsg.id = RESPONSE_ERROR;
+		int8_t i;
+		for(i = 0;i < MSG_SZ; i++) tmsg.data[i] = 0;
+		msg_append_chksum(&tmsg);
+		UART_putc(UART0,PREAMBLE);
+		UART_write(UART0, (uint8_t*)&tmsg, sizeof(tmsg));
+		UART_putc(UART0,TERMINATOR);
+	}
     	return 0;
     } else {
 	return -1;
