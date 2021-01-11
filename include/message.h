@@ -42,10 +42,7 @@ enum messgage_id {
 	RESPONSE_ERROR
 };
 
-
-
-
-typedef int16_t (*handler_func_t)(void *data);
+typedef int8_t (*handler_func_t)(void *data);
 extern handler_func_t handler_table[HANDLERS_TABLE_SZ];
 
 enum sc_state {
@@ -55,8 +52,8 @@ enum sc_state {
 	STOP
 };
 
-int16_t process_message(struct ringbuffer *buff);
-int16_t dispatch(struct message *msg, handler_func_t table[]);
+int8_t process_message(struct ringbuffer *buff);
+int8_t dispatch(struct message *msg, handler_func_t table[]);
 void print_message(struct message *msg);
 
 //void wrap_message(uint8_t id, const uint8_t *data);

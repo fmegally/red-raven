@@ -23,7 +23,7 @@ unsigned char atord(char c)
 }
 
 static
-int16_t handler_gpio_set_mode(void* data)
+int8_t handler_gpio_set_mode(void* data)
 {
     struct frame
     {
@@ -41,7 +41,7 @@ int16_t handler_gpio_set_mode(void* data)
 }
 
 static
-int16_t handler_gpio_clr_pin(void* data)
+int8_t handler_gpio_clr_pin(void* data)
 {
 	struct frame
 	{
@@ -61,7 +61,7 @@ int16_t handler_gpio_clr_pin(void* data)
 }
 
 static
-int16_t handler_gpio_set_pin(void* data)
+int8_t handler_gpio_set_pin(void* data)
 {
 	struct frame
 	{
@@ -81,7 +81,7 @@ int16_t handler_gpio_set_pin(void* data)
 }
 
 static
-int16_t handler_gpio_get_pin(void* data)
+int8_t handler_gpio_get_pin(void* data)
 {
 	struct frame
 	{
@@ -89,10 +89,6 @@ int16_t handler_gpio_get_pin(void* data)
 		uint8_t gpio_pin;
 	};
     
-	#ifdef TESTING	
-	UART_print(UART0,"function call:handler_gpio_get_pin");
-	#endif
-
 	struct frame *gpio_args = (struct frame *)data;
 	gpio_t* const  port = gpio_ports_list[gpio_args->gpio_port_ix];
 	uint8_t res = gpio_getbit(port, gpio_args->gpio_pin);
@@ -101,47 +97,32 @@ int16_t handler_gpio_get_pin(void* data)
 }
 
 static
-int16_t handler_set_pwm_duty(void* data)
+int8_t handler_set_pwm_duty(void* data)
 {
-	#ifdef TESTING	
-	UART_print(UART0,"function call :: handler_set_pwm_duty()\n");
-	#endif
 	return 0;
 }
 
 static
-int16_t handler_echo_msg(void* data)
+int8_t handler_echo_msg(void* data)
 {
-	#ifdef TESTING	
-	UART_print(UART0,"function call :: handler_echo_msg()\n");
-	#endif
 	return 0;
 }
 
 static
-int16_t handler_set_kp(void* data)
+int8_t handler_set_kp(void* data)
 {
-	#ifdef TESTING	
-    UART_print(UART0,"function call :: handler_set_kp()\n");
-	#endif
 	return 0;
 }
 
 static
-int16_t handler_set_ki(void* data)
+int8_t handler_set_ki(void* data)
 {
-	#ifdef TESTING	
-	UART_print(UART0,"function call :: handler_set_ki()\n");
-	#endif
 	return 0;
 }
 
 static
-int16_t handler_set_kd(void* data)
+int8_t handler_set_kd(void* data)
 {
-	#ifdef TESTING	
-	UART_print(UART0,"function call :: handler_set_kd()\n");
-	#endif
 	return 0;
 }
 
@@ -161,7 +142,7 @@ handler_func_t handler_table[HANDLERS_TABLE_SZ] =
 };
 
 static
-int16_t scan(struct ringbuffer *buff, struct message *msg)
+int8_t scan(struct ringbuffer *buff, struct message *msg)
 {
     uint8_t n = 0;
     enum sc_state state = IDLE;
@@ -207,17 +188,17 @@ int16_t scan(struct ringbuffer *buff, struct message *msg)
 static
 void msg_append_chksum(struct message* msg)
 {
-	msg->chksum = chksum((uint8_t*)msg,sizeof(struct message)-1);
+	msg->chksum = chksum((uint8_t*)msg, sizeof(struct message)-1);
 	return;
 }
 
-int16_t dispatch(struct message *msg, handler_func_t table[])
+int8_t dispatch(struct message *msg, handler_func_t table[])
 {
 	int8_t r = (*(table[msg->id]))(msg->data);
 	return r;
 }
 
-int16_t process_message(struct ringbuffer *buff)
+int8_t process_message(struct ringbuffer *buff)
 {
     struct message tmsg;
     int8_t r;
