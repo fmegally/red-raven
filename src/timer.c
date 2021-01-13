@@ -68,8 +68,6 @@ void timer8_udelay (tcnt_8b_t * timer, uint8_t usec)
 }
 
 
-
-
 void timer16_set_mode (tcnt_16b_t* timer, enum tcnt_modes mode)
 {
 	uint8_t msk;
