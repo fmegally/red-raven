@@ -10,12 +10,12 @@
 
 #define MSG_SZ              8
 #define HANDLERS_TABLE_SZ   32
-#define PREAMBLE            0xAAU
-#define TERMINATOR          0x55U
+#define SD                  0xAAU  //Start Delimiter
+#define ED                  0x55U  //End Delimiter
 #define ACK                 0x06U
 #define NAK                 0x15U
 
-#define ERROR_INVALID_PREAMBLE  -1
+#define ERROR_INVALID_SD        -1
 #define ERROR_FSM_FAULT         -2
 
 struct message

@@ -155,7 +155,7 @@ int8_t scan(struct ringbuffer *buff, struct message *msg)
             switch(state)
             {
                 case IDLE:
-                    if(c == PREAMBLE) state = FETCHING;
+                    if(c == SD) state = FETCHING;
                     continue;
 
                 case FETCHING:
@@ -164,7 +164,7 @@ int8_t scan(struct ringbuffer *buff, struct message *msg)
                     continue;
 
                 case TERM:
-                    if (c == TERMINATOR && !chksum((uint8_t *)msg, sizeof(*msg)))
+                    if (c == ED && !chksum((uint8_t *)msg, sizeof(*msg)))
                     {
                         state = STOP;
 			n = 0;
@@ -209,17 +209,17 @@ int8_t process_message(struct ringbuffer *buff)
 		int8_t i;
 		for(i = 0;i < MSG_SZ; i++) tmsg.data[i] = 0;
 		msg_append_chksum(&tmsg);
-		UART_putc(UART0,PREAMBLE);
+		UART_putc(UART0,SD);
 		UART_write(UART0, (uint8_t*)&tmsg,10);
-		UART_putc(UART0,TERMINATOR);
+		UART_putc(UART0,ED);
 	} else {
 		tmsg.id = RESPONSE_ERROR;
 		int8_t i;
 		for(i = 0;i < MSG_SZ; i++) tmsg.data[i] = 0;
 		msg_append_chksum(&tmsg);
-		UART_putc(UART0,PREAMBLE);
+		UART_putc(UART0,SD);
 		UART_write(UART0, (uint8_t*)&tmsg, sizeof(tmsg));
-		UART_putc(UART0,TERMINATOR);
+		UART_putc(UART0,ED);
 	}
     	return 0;
     } else {
