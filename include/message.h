@@ -8,7 +8,7 @@
 #include "uart.h"
 #include "chksum.h"
 
-#define MSG_SZ              8
+#define TELEGRAM_SZ         8
 #define HANDLERS_TABLE_SZ   32
 #define SD                  0xAAU  //Start Delimiter
 #define ED                  0x55U  //End Delimiter
@@ -18,14 +18,14 @@
 #define ERROR_INVALID_SD        -1
 #define ERROR_FSM_FAULT         -2
 
-struct message
+struct telegram
 {
 	uint8_t id;
 	uint8_t data[MSG_SZ];
 	uint8_t chksum;
 };
 
-enum messgage_id {
+enum telegram_id {
 	NULL_MSG,
 	GPIO_SET_MODE,
 	GPIO_WRITE_PORT,
@@ -52,9 +52,9 @@ enum sc_state {
 	STOP
 };
 
-int8_t process_message(struct ringbuffer *buff);
-int8_t dispatch(struct message *msg, handler_func_t table[]);
-void print_message(struct message *msg);
+int8_t process_telegram(struct ringbuffer *buff);
+int8_t dispatch(struct telegram *tg, handler_func_t table[]);
+void print_telegram(struct telegram *tg);
 
 //void wrap_message(uint8_t id, const uint8_t *data);
 //int8_t send_message(struct message *msg);

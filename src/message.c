@@ -1,12 +1,12 @@
 #include "gpio.h"
 #include "uart.h"
-#include "message.h"
+#include "telegram.h"
 #include <stdio.h>
 
 #define SCAN_MAX_TRIALS 20
 
 
-/* this section is for the handler functions that correspond to each message type (ID)*/
+/* this section is for the handler functions that correspond to each telegram type (ID)*/
 /* should probably me moved to its own handler files                                  */
 
 unsigned char atord(char c)
@@ -142,7 +142,7 @@ handler_func_t handler_table[HANDLERS_TABLE_SZ] =
 };
 
 static
-int8_t scan(struct ringbuffer *buff, struct message *msg)
+int8_t scan(struct ringbuffer *buff, struct telegram *tg)
 {
     uint8_t n = 0;
     enum sc_state state = IDLE;
@@ -160,11 +160,11 @@ int8_t scan(struct ringbuffer *buff, struct message *msg)
 
                 case FETCHING:
                     ((uint8_t*)msg)[n++] = c;
-                    if (n == sizeof(struct message)) state = TERM;
+                    if (n == sizeof(struct telegram)) state = TERM;
                     continue;
 
                 case TERM:
-                    if (c == ED && !chksum((uint8_t *)msg, sizeof(*msg)))
+                    if (c == ED && !chksum((uint8_t *)tg, sizeof(*msg)))
                     {
                         state = STOP;
 			n = 0;
@@ -186,39 +186,39 @@ int8_t scan(struct ringbuffer *buff, struct message *msg)
 }
 
 static
-void msg_append_chksum(struct message* msg)
+void telegram_append_chksum(struct telegram* tg)
 {
-	msg->chksum = chksum((uint8_t*)msg, sizeof(struct message)-1);
+	tg->chksum = chksum((uint8_t*)tg, sizeof(struct message)-1);
 	return;
 }
 
-int8_t dispatch(struct message *msg, handler_func_t table[])
+int8_t dispatch(struct telegram *tg, handler_func_t table[])
 {
-	int8_t r = (*(table[msg->id]))(msg->data);
+	int8_t r = (*(table[tg->id]))(tg->data);
 	return r;
 }
 
-int8_t process_message(struct ringbuffer *buff)
+int8_t process_telegram(struct ringbuffer *buff)
 {
-    struct message tmsg;
+    struct telegram ttg;
     int8_t r;
-    if (scan(buff, &tmsg) == 0){
-    	r = dispatch(&tmsg,handler_table);
+    if (scan(buff, &ttg) == 0){
+    	r = dispatch(&ttg,handler_table);
 	if( r == 0){
-		tmsg.id = RESPONSE_SUCCESS;
+		ttg.id = RESPONSE_SUCCESS;
 		int8_t i;
-		for(i = 0;i < MSG_SZ; i++) tmsg.data[i] = 0;
-		msg_append_chksum(&tmsg);
+		for(i = 0;i < MSG_SZ; i++) ttg.data[i] = 0;
+		msg_append_chksum(&ttg);
 		UART_putc(UART0,SD);
-		UART_write(UART0, (uint8_t*)&tmsg,10);
+		UART_write(UART0, (uint8_t*)&ttg,10);
 		UART_putc(UART0,ED);
 	} else {
-		tmsg.id = RESPONSE_ERROR;
+		ttg.id = RESPONSE_ERROR;
 		int8_t i;
-		for(i = 0;i < MSG_SZ; i++) tmsg.data[i] = 0;
-		msg_append_chksum(&tmsg);
+		for(i = 0;i < MSG_SZ; i++) ttg.data[i] = 0;
+		msg_append_chksum(&ttg);
 		UART_putc(UART0,SD);
-		UART_write(UART0, (uint8_t*)&tmsg, sizeof(tmsg));
+		UART_write(UART0, (uint8_t*)&ttg, sizeof(ttg));
 		UART_putc(UART0,ED);
 	}
     	return 0;
@@ -227,21 +227,21 @@ int8_t process_message(struct ringbuffer *buff)
     }
 }
 
-void print_message(struct message *msg)
+void print_telegram(struct telegram *ttg)
 {
     char buffer[32];
-    sprintf(buffer, "Message ID :\t\t%02X\n",msg->id);
+    sprintf(buffer, "Message ID :\t\t%02X\n",ttg->id);
     UART_print(UART0,buffer);
     UART_print(UART0, "Message Data :\t\t");
 
     for (int i = 0; i < MSG_SZ; i++) 
     {
-    	sprintf(buffer,"%02X ",msg->data[i]);
+    	sprintf(buffer,"%02X ",ttg->data[i]);
     	UART_print(UART0, buffer);
     	UART_print(UART0, "\n");
     }
 
-    sprintf(buffer, "Message Checksum :\t%02X\n",msg->chksum);
+    sprintf(buffer, "Message Checksum :\t%02X\n",ttg->chksum);
     UART_print(UART0,buffer);
     return;
 }
