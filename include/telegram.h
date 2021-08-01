@@ -46,10 +46,12 @@ typedef int8_t (*handler_func_t)(void *data);
 extern handler_func_t handler_table[HANDLERS_TABLE_SZ];
 
 enum sc_state {
-	IDLE,
-	FETCHING,
-	TERM,
-	STOP
+	SD,
+	ID,
+	PDU,
+	FCS,
+	ED,
+	HALT	
 };
 
 int8_t process_telegram(struct ringbuffer *buff);

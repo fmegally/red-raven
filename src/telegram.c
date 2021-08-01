@@ -148,7 +148,7 @@ int8_t scan(struct ringbuffer *buff, struct telegram *tg)
     enum sc_state state = IDLE;
     unsigned char c;
      
-    while(state != STOP)
+    while(state != HALT)
     {
         if(rb_getc(&c, buff))
         {
