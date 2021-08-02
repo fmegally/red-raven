@@ -10,7 +10,7 @@
 
 #define TELEGRAM_SZ         8
 #define HANDLERS_TABLE_SZ   32
-#define SD                  0xAAU  //Start Delimiter
+#define SD1                 0xAAU  //Start Delimiter
 #define ED                  0x55U  //End Delimiter
 #define ACK                 0x06U
 #define NAK                 0x15U

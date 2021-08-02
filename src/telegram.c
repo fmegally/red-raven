@@ -23,6 +23,29 @@ unsigned char atord(char c)
 }
 
 static
+int is_valid_id(int id)
+{
+	switch(id){
+		case NULL_MSG:
+		case GPIO_SET_MODE:
+		case GPIO_WRITE_PORT:
+		case GPIO_READ_PORT:
+		case GPIO_SET_PIN:
+		case GPIO_GET_PIN:
+		case GPIO_FLIP_PIN:
+		case SET_PWM_DUTY:
+		case ECHO_MSG:
+		case PID_SET_KP:
+ 		case PID_SET_KI:
+		case PID_SET_KD:
+		case RESPONSE_SUCCESS:
+			return 1;
+		default:
+			return 0;
+	}
+}
+
+static
 int8_t handler_gpio_set_mode(void* data)
 {
     struct frame
@@ -142,39 +165,57 @@ handler_func_t handler_table[HANDLERS_TABLE_SZ] =
 };
 
 static
-int8_t scan(struct ringbuffer *buff, struct telegram *tg)
+int8_t scan_for_telegram(struct ringbuffer *src, struct telegram *tg)
 {
+    enum sc_state state = SD;
     uint8_t n = 0;
-    enum sc_state state = IDLE;
     unsigned char c;
      
     while(state != HALT)
     {
-        if(rb_getc(&c, buff))
+        if(rb_getc(&c, src))
         {
             switch(state)
             {
-                case IDLE:
-                    if(c == SD) state = FETCHING;
-                    continue;
+                case SD:
+                    if(c == SD1) {
+			    state = ID;
+                    	    break;
+		    } else {
+			    return -1;
+		    }
 
-                case FETCHING:
-                    ((uint8_t*)msg)[n++] = c;
-                    if (n == sizeof(struct telegram)) state = TERM;
-                    continue;
+                case ID:
+		    if(is_valid_id(c)){
+			tg->id = c;
+			state = PDU;
+			break;
+		    } else {
+			return -2;
+		    }
 
-                case TERM:
-                    if (c == ED && !chksum((uint8_t *)tg, sizeof(*msg)))
-                    {
-                        state = STOP;
-			n = 0;
-			continue;
-                    } else {
-                        state = IDLE;
-			n = 0;
-			continue;
-                    }
-                
+                case PDU:
+		    tg->data[n++] = c;
+		    if (n == TELEGRAM_SZ) state = FCS;
+		    break;
+
+		case FCS:
+		    tg->chksum = c;
+		    if (chksum(uint8_t*)tg, sizeof(struct telegram) == 0){
+		         state = ED;
+			 break;
+		    } else {
+		         return -4;
+		    }
+
+		case ED:
+		    if(c == ED) {
+			    state = HALT;
+			    break;
+		    } else {
+			    return -8;
+	            }
+
                 default:
 			return -1;
             }
@@ -188,7 +229,7 @@ int8_t scan(struct ringbuffer *buff, struct telegram *tg)
 static
 void telegram_append_chksum(struct telegram* tg)
 {
-	tg->chksum = chksum((uint8_t*)tg, sizeof(struct message)-1);
+	tg->chksum = chksum((uint8_t*)tg, sizeof(struct telegram)-1);
 	return;
 }
 
