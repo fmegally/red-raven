@@ -10,18 +10,20 @@
 
 #define TELEGRAM_SZ         8
 #define HANDLERS_TABLE_SZ   32
-#define SD1                 0xAAU  //Start Delimiter
-#define ED                  0x55U  //End Delimiter
-#define ACK                 0x06U
-#define NAK                 0x15U
+#define SDB                 0xAAU  //Start Delimiter for fixed length telegram
+#define EDB                 0x55U  //End Delimiter
+#define ACKB                0x06U
+#define NAKB                0x15U
 
 #define ERROR_INVALID_SD        -1
-#define ERROR_FSM_FAULT         -2
+#define ERROR_INVALID_ID        -2
+#define ERROR_FAILED_CHKSUM     -4
+#define ERROR_INVALID_CHKSUM    -8
+#define ERROR_INVALID_ED       -16
 
-struct telegram
-{
+struct telegram {
 	uint8_t id;
-	uint8_t data[MSG_SZ];
+	uint8_t data[TELEGRAM_SZ];
 	uint8_t chksum;
 };
 
@@ -34,12 +36,7 @@ enum telegram_id {
 	GPIO_GET_PIN,
 	GPIO_FLIP_PIN,
 	SET_PWM_DUTY,
-	ECHO_MSG,
-	PID_SET_KP,
- 	PID_SET_KI,
-	PID_SET_KD,
-	RESPONSE_SUCCESS,
-	RESPONSE_ERROR
+	ECHO_MSG
 };
 
 typedef int8_t (*handler_func_t)(void *data);
@@ -54,7 +51,7 @@ enum sc_state {
 	HALT	
 };
 
-int8_t process_telegram(struct ringbuffer *buff);
+int8_t process_telegram(struct telegram *tg);
 int8_t dispatch(struct telegram *tg, handler_func_t table[]);
 void print_telegram(struct telegram *tg);
 
