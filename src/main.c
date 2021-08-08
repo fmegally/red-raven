@@ -9,7 +9,7 @@
 
 static struct ringbuffer uart_rx_buffer;
 
-ISR(USART_RX_vect)
+ISR(USART0_RX_vect)
 {
 	uint8_t c = UDR0;
 	rb_putc(&c , &uart_rx_buffer);
@@ -18,7 +18,7 @@ ISR(USART_RX_vect)
 
 void init_system()
 {
-		cli()
+		cli();
 		rb_init(&uart_rx_buffer, 48);
 		UART_init(UART0, 9600, UART_PARITY_NONE, UART_CHAR_SIZE_8BIT);
 		sei();
