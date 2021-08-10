@@ -8,9 +8,9 @@
 #include "uart.h"
 #include "chksum.h"
 
-#define TELEGRAM_SZ         8
-#define SDB                 0xAAU  //Start Delimiter for fixed length telegram
-#define EDB                 0x55U  //End Delimiter
+#define TELEGRAM_SZ        8
+#define SD                 0xAAU  //Start Delimiter for fixed length telegram
+#define ED                 0x55U  //End Delimiter
 
 #define ERROR_INVALID_SD        -1
 #define ERROR_INVALID_ID        -2
@@ -28,6 +28,7 @@ enum telegram_id {
 	NULL_MSG,
 	ECHO_MSG,
 	ACK=0x06,
+	//Insert new IDs here. IDs
 	NAK=0x15,
 	ID_TABLE_SIZE
 };
@@ -36,12 +37,12 @@ typedef int8_t (*handler_func_t)(void *data);
 extern handler_func_t handler_table[ID_TABLE_SIZE];
 
 enum sc_state {
-	SD,
-	ID,
-	PDU,
-	FCS,
-	ED,
-	HALT	
+	FSM_SD,
+	FSM_ID,
+	FSM_PDU,
+	FSM_FCS,
+	FSM_ED,
+	FSM_HALT	
 };
 
 int8_t process_telegram(struct telegram *tg);
