@@ -9,11 +9,8 @@
 #include "chksum.h"
 
 #define TELEGRAM_SZ         8
-#define HANDLERS_TABLE_SZ   32
 #define SDB                 0xAAU  //Start Delimiter for fixed length telegram
 #define EDB                 0x55U  //End Delimiter
-#define ACKB                0x06U
-#define NAKB                0x15U
 
 #define ERROR_INVALID_SD        -1
 #define ERROR_INVALID_ID        -2
@@ -29,18 +26,14 @@ struct telegram {
 
 enum telegram_id {
 	NULL_MSG,
-	GPIO_SET_MODE,
-	GPIO_WRITE_PORT,
-	GPIO_READ_PORT,
-	GPIO_SET_PIN,
-	GPIO_GET_PIN,
-	GPIO_FLIP_PIN,
-	SET_PWM_DUTY,
-	ECHO_MSG
+	ECHO_MSG,
+	ACK=0x06,
+	NAK=0x15,
+	ID_TABLE_SIZE
 };
 
 typedef int8_t (*handler_func_t)(void *data);
-extern handler_func_t handler_table[HANDLERS_TABLE_SZ];
+extern handler_func_t handler_table[ID_TABLE_SIZE];
 
 enum sc_state {
 	SD,

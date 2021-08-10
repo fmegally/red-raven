@@ -35,8 +35,8 @@ int is_valid_id(int id)
         case GPIO_FLIP_PIN:
         case SET_PWM_DUTY:
         case ECHO_MSG:
-        case ACKB:
-        case NAKB:
+        case ACK:
+        case NAK:
             return 1;
         default:
             return 0;
@@ -61,67 +61,7 @@ int8_t handler_gpio_set_mode(void* data)
     return 0;
 }
 
-static
-int8_t handler_gpio_clr_pin(void* data)
-{
-    struct frame
-    {
-        uint8_t gpio_port_ix;
-        uint8_t gpio_pin;
-    };
-    
-    struct frame *gpio_args = (struct frame *)data;
 
-    #ifdef TESTING  
-    UART_print(UART0,"function call:handler_gpio_clr_pin");
-    #endif
-    gpio_t* const port = gpio_ports_list[gpio_args->gpio_port_ix];
-    gpio_clrbit(port, gpio_args->gpio_pin);
-
-    return 0;
-}
-
-static
-int8_t handler_gpio_set_pin(void* data)
-{
-    struct frame
-    {
-        uint8_t gpio_port_ix;
-        uint8_t gpio_pin;
-    };
-    
-    struct frame *gpio_args = (struct frame *)data;
-
-    #ifdef TESTING  
-    UART_print(UART0,"function call:handler_gpio_set_pin");
-    #endif
-    gpio_t* const port = gpio_ports_list[gpio_args->gpio_port_ix];
-    gpio_setbit(port, gpio_args->gpio_pin);
-
-    return 0;
-}
-
-static
-int8_t handler_gpio_get_pin(void* data)
-{
-    struct frame
-    {
-        uint8_t gpio_port_ix;
-        uint8_t gpio_pin;
-    };
-    
-    struct frame *gpio_args = (struct frame *)data;
-    gpio_t* const  port = gpio_ports_list[gpio_args->gpio_port_ix];
-    uint8_t res = gpio_getbit(port, gpio_args->gpio_pin);
-
-    return res;
-}
-
-static
-int8_t handler_set_pwm_duty(void* data)
-{
-    return 0;
-}
 
 static
 int8_t handler_echo_msg(void* data)
@@ -131,14 +71,10 @@ int8_t handler_echo_msg(void* data)
 
 /* end of handlers implementation */
 
-handler_func_t handler_table[HANDLERS_TABLE_SZ] = 
+handler_func_t handler_table[ID_TABLE_SIZE] = 
     {
-        [1] = handler_gpio_set_mode,
-        handler_gpio_set_pin,
-        handler_gpio_clr_pin,
-        handler_gpio_get_pin,
-        handler_set_pwm_duty,
-        handler_echo_msg
+        [ECHO_MSG] = handler_gpio_set_mode,
+        [GPIO_SET_PIN]  = handler_gpio_set_pin,
     };
 
 static
