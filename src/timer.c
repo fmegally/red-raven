@@ -97,8 +97,7 @@ void timer16_stop (tcnt_16b_t* timer)
 
 uint16_t timer16_get_input_capture (tcnt_16b_t* timer)
 {
-	*dst = timer->ICRn;	
-	return;
+	return timer->ICRn;	
 }
 
 void timer16_set_ocr (tcnt_16b_t* timer, uint16_t ocr, enum tcnt_occ channel)

@@ -34,7 +34,7 @@ enum telegram_id {
 };
 
 typedef int8_t (*handler_func_t)(void *data);
-extern handler_func_t handler_table[ID_TABLE_SIZE];
+extern handler_func_t tlgrm_handler_table[ID_TABLE_SIZE];
 
 enum sc_state {
 	FSM_SD,
@@ -45,9 +45,11 @@ enum sc_state {
 	FSM_HALT	
 };
 
-int8_t process_telegram(struct telegram *tg);
+int8_t fetch_tlgrm(struct ringbuffer *src, struct telegram *tg);
 int8_t dispatch(struct telegram *tg, handler_func_t table[]);
-void print_telegram(struct telegram *tg);
+void print_tlgrm(struct telegram *src, uart_t *dst);
+void send_nak_tlgrm(uart_t *u);
+void send_ack_tlgrm(uart_t *u);
 
 //void wrap_message(uint8_t id, const uint8_t *data);
 //int8_t send_message(struct message *msg);

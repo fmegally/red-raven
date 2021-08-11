@@ -30,7 +30,17 @@ int main(int argc, char *argv[])
 	init_system();
 	UART_print(UART0,"Init complete");
 
+        struct telegram tg;
+        int8_t tlgrm_error_code;
+
 	while(1){
+                tlgrm_error_code = fetch_tlgrm(&uart_rx_buffer,&tg);
+                if(tlgrm_error_code == 0){
+                        send_ack_tlgrm(UART0);
+                        dispatch(&tg, tlgrm_handler_table);
+                } else {
+                        send_nak_tlgrm(UART0);
+                }
 	}
 
 	return 0;

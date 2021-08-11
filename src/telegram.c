@@ -7,33 +7,30 @@
 
 unsigned char atord(char c)
 {
-    if (c >= 'A' && c <= 'Z')
-    {
-        return (c - 'A') + 1;
-    } else if (c >= 'a' && c <= 'z')
-    {
-        return (c - 'a') + 1;
-    } else {
-        return 0;
-    }
+        if (c >= 'A' && c <= 'Z'){
+                return (c - 'A') + 1;
+        } else if (c >= 'a' && c <= 'z') {
+                return (c - 'a') + 1;
+        } else {
+                return 0;
+        }
 }
 
 /* this section is for the handler functions that correspond to each telegram type (ID)*/
 /* should probably me moved to its own handler files                                  */
 
-
 static
 int is_valid_id(int id)
 {
-    switch(id){
-        case NULL_MSG:
-        case ECHO_MSG:
-        case ACK:
-        case NAK:
-            return 1;
-        default:
-            return 0;
-    }
+        switch(id){
+                case NULL_MSG:
+                case ECHO_MSG:
+                case ACK:
+                case NAK:
+                        return 1;
+                default:
+                        return 0;
+                }
 }
 
 /*
@@ -60,126 +57,116 @@ int8_t handler_gpio_set_mode(void* data)
 static
 int8_t handler_echo_msg(void* data)
 {
-    return 0;
+        return 0;
 }
 
 /* end of handlers implementation */
 
-handler_func_t handler_table[ID_TABLE_SIZE] = 
+handler_func_t tlgrm_handler_table[ID_TABLE_SIZE] = 
     {
         [ECHO_MSG] = handler_echo_msg
     };
 
-static
-int8_t scan_telegram(struct ringbuffer *src, struct telegram *tg)
+int8_t fetch_tlgrm(struct ringbuffer *src, struct telegram *tg)
 {
-    enum sc_state state = FSM_SD;
-    uint8_t n = 0;
-    unsigned char c;
+        enum sc_state state = FSM_SD;
+        uint8_t n = 0;
+        unsigned char c;
      
-    while(state != FSM_HALT) {
-        if(rb_getc(&c, src)) {
-            switch(state) {
-            case FSM_SD:
-                if(c == SD) {
-                    state = FSM_ID;
-                    break;
+        while(state != FSM_HALT) {
+                if(rb_getc(&c, src)) {
+                        switch(state) {
+
+                        case FSM_SD:
+                        if(c == SD) {
+                                state = FSM_ID;
+                                break;
+                        } else {
+                                return -1;
+                        }
+
+                        case FSM_ID:
+                        if(is_valid_id(c)){
+                                tg->id = c;
+                                state = FSM_PDU;
+                                break;
+                        } else {
+                                return -2;
+                        }
+
+                        case FSM_PDU:
+                                tg->data[n++] = c;
+                                if (n == TELEGRAM_SZ) state = FSM_FCS;
+                                break;
+
+                        case FSM_FCS:
+                                tg->chksum = c;
+                                if (chksum((uint8_t*)tg, sizeof(struct telegram)) == 0){
+                                        state = ED;
+                                        break;
+                                } else {
+                                        return -4;
+                                }
+
+                        case FSM_ED:
+                                if(c == ED) {
+                                        state = FSM_HALT;
+                                        break;
+                                } else {
+                                        return -8;
+                                }
+                        default:
+                                return -1;
+                        }
                 } else {
-                    return -1;
+                        continue;
                 }
-            case FSM_ID:
-                if(is_valid_id(c)){
-                    tg->id = c;
-                    state = FSM_PDU;
-                    break;
-                } else {
-                    return -2;
-                }
-            case FSM_PDU:
-                tg->data[n++] = c;
-                if (n == TELEGRAM_SZ) state = FSM_FCS;
-                break;
-            case FSM_FCS:
-                tg->chksum = c;
-                if (chksum((uint8_t*)tg, sizeof(struct telegram)) == 0){
-                    state = ED;
-                    break;
-                } else {
-                    return -4;
-                }
-            case FSM_ED:
-                if(c == ED) {
-                    state = FSM_HALT;
-                    break;
-                } else {
-                    return -8;
-                }
-            default:
-                return -1;
-            }
-        } else {
-            continue;
         }
-    }
-    return 0;
+                return 0;
 }
 
 static
-void telegram_append_chksum(struct telegram* tg)
+void calc_telegram_chksum(struct telegram* tg)
 {
-    tg->chksum = chksum((uint8_t*)tg, sizeof(struct telegram)-1);
-    return;
+        tg->chksum = chksum((uint8_t*)tg, sizeof(struct telegram)-1);
+        return;
 }
 
 int8_t dispatch(struct telegram *tg, handler_func_t table[])
 {
-    int8_t r = (*(table[tg->id]))(tg->data);
-    return r;
+        int8_t r = (*(table[tg->id]))(tg->data);
+        return r;
 }
 
-static
 void send_ack_tlgrm(uart_t *u)
 {
-    uint8_t seq[2+TELEGRAM_SZ+2] = {[0]=SD,ACK,[1+TELEGRAM_SZ]=~ACK,ED};
-    UART_write(u, seq, 2+TELEGRAM_SZ+2);
-    return;
+        uint8_t seq[2+TELEGRAM_SZ+2] = {[0]=SD,ACK,[1+TELEGRAM_SZ]=~ACK,ED};
+        UART_write(u, seq, 2+TELEGRAM_SZ+2);
+        return;
 }
     
-static
 void send_nak_tlgrm(uart_t *u)
 {
-    uint8_t seq[2+TELEGRAM_SZ+2] = {[0]=SD,NAK,[1+TELEGRAM_SZ]=~NAK,ED};
-    UART_write(u, seq, 2+TELEGRAM_SZ+2);
-    return;
+        uint8_t seq[2+TELEGRAM_SZ+2] = {[0]=SD,NAK,[1+TELEGRAM_SZ]=~NAK,ED};
+        UART_write(u, seq, 2+TELEGRAM_SZ+2);
+        return;
 }
 
-int8_t fetch_telegram(struct ringbuffer *src,struct telegram *tg)
+void print_tlgrm(struct telegram *src, uart_t *dst)
 {
-    int8_t r = scan_telegram(src,tg);
-    if( r == 0){
-        send_ack_tlgrm(UART0);
-        return 0;
-    } else {
-        send_nak_tlgrm(UART0);
-        return -1;
-    }
-}
+        char buffer[32];
+        sprintf(buffer, "Message ID :\t\t%02X\n",src->id);
+        UART_print(dst, buffer);
+        UART_print(dst, "Message Data :\t\t");
 
-void print_telegram(struct telegram *ttg)
-{
-    char buffer[32];
-    sprintf(buffer, "Message ID :\t\t%02X\n",ttg->id);
-    UART_print(UART0,buffer);
-    UART_print(UART0, "Message Data :\t\t");
+        for (int i = 0; i < TELEGRAM_SZ; i++) 
+        {
+                sprintf(buffer,"%02X ",src->data[i]);
+                UART_print(dst, buffer);
+                UART_print(dst, "\n");
+        }
 
-    for (int i = 0; i < TELEGRAM_SZ; i++) 
-    {
-        sprintf(buffer,"%02X ",ttg->data[i]);
-        UART_print(UART0, buffer);
-        UART_print(UART0, "\n");
-    }
-
-    sprintf(buffer, "Message Checksum :\t%02X\n",ttg->chksum);
-    UART_print(UART0,buffer);
-    return;
+        sprintf(buffer, "Message Checksum :\t%02X\n",src->chksum);
+        UART_print(dst, buffer);
+        return;
 }
