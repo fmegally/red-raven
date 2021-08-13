@@ -28,8 +28,12 @@ enum telegram_id {
 	NULL_MSG,
 	ECHO_MSG,
 	ACK=0x06,
+	CONFIRM=0x07,
+	GPIO_CMD=0x08,
+	GPIO_REPLY=0x09,
 	//Insert new IDs here. IDs
 	NAK=0x15,
+	ERROR=0x17,
 	ID_TABLE_SIZE
 };
 

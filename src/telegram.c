@@ -5,6 +5,15 @@
 
 #define SCAN_MAX_TRIALS 20
 
+enum gpio_cmds
+{
+	SET_DDR,
+	SET_PORT,
+	GET_PORT,
+	SET_PIN,
+	CLR_PIN
+};
+
 unsigned char atord(char c)
 {
         if (c >= 'A' && c <= 'Z'){
@@ -33,25 +42,62 @@ int is_valid_id(int id)
                 }
 }
 
-/*
 static
-int8_t handler_gpio_set_mode(void* data)
+int8_t handler_gpio_cmd(void* data)
 {
-    struct frame
+    struct gpio_cmd
     {
-        uint8_t gpio_port;
-        uint8_t gpio_ddr;
+	uint8_t cmd;
+        uint8_t port;
+	uint8_t pin;
+        uint8_t value;
     };
+
     #ifdef TESTING  
-    UART_print(UART0,"function call:handler_gpio_set_mode");
+    UART_print(UART0,"function call:handler_gpio_cmd");
     #endif
-    struct frame *gpio_args = (struct frame *)data;
-    gpio_t* const port = gpio_ports_list[gpio_args->gpio_port];
-    gpio_setmode(port, gpio_args->gpio_ddr);
-        
+    struct gpio_cmd *args = (struct gpio_cmd *)data;
+    gpio_t* const port = gpio_ports_list[args->port];
+    switch(args->cmd){
+	case SET_DDR:
+		gpio_setmode(port,args->value);
+		break;
+
+	case SET_PORT:
+		gpio_pwrite(port,args->value);
+		break;
+
+	case GET_PORT:
+		uint8_t port_value = gpio_pread(port);
+		struct telegram	reply = {GPIO_REPLY,{port_value}};
+		reply.chksum = chksum(&reply,sizeof(struct telegram) - 1);
+		UART_putc(UART0, SD);
+		UART_write((uint8_t*)&reply,sizeof(struct telegram));
+		UART_putc(UART0, ED);
+		break;
+
+	case SET_PIN:
+		if( args->pin < 8){
+			gpio_setbit(port,args->pin);
+			break;
+		} else {
+			break;
+		}
+
+	case CLR_PIN:
+		if( args->pin < 8){
+			gpio_clrbit(port,args->pin);
+			break;
+		} else {
+			break;
+		}
+
+	case default:
+		break;
+
+
     return 0;
 }
-*/
 
 
 static
@@ -64,7 +110,8 @@ int8_t handler_echo_msg(void* data)
 
 handler_func_t tlgrm_handler_table[ID_TABLE_SIZE] = 
     {
-        [ECHO_MSG] = handler_echo_msg
+        [ECHO_MSG] = handler_echo_msg,
+	[GPIO_CMD] = handler_gpio_cmd
     };
 
 int8_t fetch_tlgrm(struct ringbuffer *src, struct telegram *tg)
