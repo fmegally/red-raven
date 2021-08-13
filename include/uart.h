@@ -2,7 +2,7 @@
  * uart.h
  *
  * Created: 3/25/2020 11:48:22 PM
- *  Author: fmega
+ *  Author: fmegally
  */ 
 
 
@@ -66,9 +66,12 @@ struct uart
 
 typedef struct uart uart_t;
 
+#if defined (__AVR_ATmega2560__) || (__AVR_ATmega328__) || (__AVR_ATmega328P__)
 #define UART0_BASE_ADD	 (0xC0)
 #define UART0 		 ((uart_t *) UART0_BASE_ADD)
+#endif
 
+#if defined (__AVR_ATmega2560__)
 #define UART1_BASE_ADD	 (0xC8)
 #define UART1 		 ((uart_t *) UART0_BASE_ADD)
 
@@ -77,6 +80,7 @@ typedef struct uart uart_t;
 
 #define UART3_BASE_ADD	 (0x130)
 #define UART3 		 ((uart_t *) UART0_BASE_ADD)
+#endif
 
 void UART_init(uart_t* base, uint32_t baud, uint8_t parity, uint8_t byte_size );
 void UART_read(uart_t* base, uint8_t* buff, uint8_t len);
