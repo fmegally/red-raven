@@ -9,12 +9,23 @@
 
 static struct ringbuffer uart_rx_buffer;
 
+#if defined (__AVR_ATmega328P__)
+ISR(USART_RX_vect)
+{
+	uint8_t c = UDR0;
+	rb_putc(&c , &uart_rx_buffer);
+	return;
+}
+#endif
+
+#if defined (__AVR_ATmega2560__)
 ISR(USART0_RX_vect)
 {
 	uint8_t c = UDR0;
 	rb_putc(&c , &uart_rx_buffer);
 	return;
 }
+#endif
 
 void init_system()
 {
@@ -28,7 +39,7 @@ void init_system()
 int main(int argc, char *argv[])
 {
 	init_system();
-	UART_print(UART0,"Init complete");
+	UART_print(UART0,"Init complete\n\r");
 
         struct telegram tg;
         int8_t tlgrm_error_code;

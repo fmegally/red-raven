@@ -15,7 +15,7 @@ struct gpio {
 
 typedef struct gpio gpio_t;
 
-extern gpio_t *gpio_ports_list [];
+extern gpio_t * const gpio_ports_list [];
 
 #if defined (__AVR_ATmega2560__)
 #define GPIO_PORTA_ADD (0x20)

@@ -5,7 +5,7 @@
 
 #define SCAN_MAX_TRIALS 20
 
-enum gpio_cmds
+enum gpio_cmd_list
 {
 	SET_DDR,
 	SET_PORT,
@@ -45,6 +45,7 @@ int is_valid_id(int id)
 static
 int8_t handler_gpio_cmd(void* data)
 {
+
     struct gpio_cmd
     {
 	uint8_t cmd;
@@ -55,6 +56,7 @@ int8_t handler_gpio_cmd(void* data)
 
     #ifdef TESTING  
     UART_print(UART0,"function call:handler_gpio_cmd");
+	
     #endif
     struct gpio_cmd *args = (struct gpio_cmd *)data;
     gpio_t* const port = gpio_ports_list[args->port];

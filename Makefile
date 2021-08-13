@@ -5,10 +5,10 @@ SDIR = ./src
 CC = avr-gcc
 CFLAGS = -Wall -I$(IDIR)
 LIBS = -lm
-PROG = atmelice_isp
-OBJF = main.o uart.o telegram.o ringbuffer.o gpio.o chksum.o timer.o
+PROG = usbtiny
+OBJF = main.o uart.o telegram.o ringbuffer.o gpio.o chksum.o 
 OBJ = $(patsubst %,$(ODIR)/%, $(OBJF))
-MCU = atmega2560
+MCU = atmega328p
 #DEPS = $(wildcard *.h)
 TARGET = main
 

@@ -1,5 +1,12 @@
 #include "gpio.h"
 
+#if defined (__AVR_ATmega328P__) || defined (__AVR_ATmega328__)
+gpio_t * const gpio_ports_list [] = {	[1]=GPIO_PORTB,
+					[2]=GPIO_PORTC,
+			     		[3]=GPIO_PORTD };
+#endif
+
+#if defined (__AVR_ATmega2560__)
 gpio_t * const gpio_ports_list [] = {	GPIO_PORTA,
 				     	GPIO_PORTB,
 					GPIO_PORTC,
@@ -11,7 +18,8 @@ gpio_t * const gpio_ports_list [] = {	GPIO_PORTA,
 			     		NULL,
 			     		GPIO_PORTJ,
 		  	     		GPIO_PORTK,
-	             			GPIO_PORTL};
+	             			GPIO_PORTL };
+#endif
 
 void gpio_setmode(gpio_t* const port, uint8_t mode)
 {
