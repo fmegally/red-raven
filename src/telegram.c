@@ -58,6 +58,7 @@ int8_t handler_gpio_cmd(void* data)
     #endif
     struct gpio_cmd *args = (struct gpio_cmd *)data;
     gpio_t* const port = gpio_ports_list[args->port];
+
     switch(args->cmd){
 	case SET_DDR:
 		gpio_setmode(port,args->value);
@@ -70,9 +71,9 @@ int8_t handler_gpio_cmd(void* data)
 	case GET_PORT:
 		uint8_t port_value = gpio_pread(port);
 		struct telegram	reply = {GPIO_REPLY,{port_value}};
-		reply.chksum = chksum(&reply,sizeof(struct telegram) - 1);
+		reply.chksum = chksum((uint8_t*)&reply,sizeof(struct telegram) - 1);
 		UART_putc(UART0, SD);
-		UART_write((uint8_t*)&reply,sizeof(struct telegram));
+		UART_write(UART0, (uint8_t*)&reply,sizeof(struct telegram));
 		UART_putc(UART0, ED);
 		break;
 
@@ -92,10 +93,10 @@ int8_t handler_gpio_cmd(void* data)
 			break;
 		}
 
-	case default:
+	default:
 		break;
 
-
+    }
     return 0;
 }
 

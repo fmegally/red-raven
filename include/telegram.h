@@ -33,7 +33,7 @@ enum telegram_id {
 	GPIO_REPLY=0x09,
 	//Insert new IDs here. IDs
 	NAK=0x15,
-	ERROR=0x17,
+	EXCEPTION=0x17,
 	ID_TABLE_SIZE
 };
 
