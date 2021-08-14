@@ -5,5 +5,5 @@
 #define true  1
 
 
-#define F_OSC 16e6
+#define F_OSC 16000000U
 #endif

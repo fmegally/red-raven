@@ -31,7 +31,7 @@ void init_system()
 {
 		cli();
 		rb_init(&uart_rx_buffer, 48);
-		UART_init(UART0, 9600, UART_PARITY_NONE, UART_CHAR_SIZE_8BIT);
+		UART_init(UART0, 250000, UART_PARITY_NONE, UART_CHAR_SIZE_8BIT);
 		sei();
 		return;
 }
@@ -39,7 +39,7 @@ void init_system()
 int main(int argc, char *argv[])
 {
 	init_system();
-	UART_print(UART0,"Init complete\n\r");
+	UART_print(UART0,"System initialization complete.\n\r");
 
         struct telegram tg;
         int8_t tlgrm_error_code;

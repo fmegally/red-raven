@@ -7,7 +7,7 @@
 
 enum gpio_cmd_list
 {
-	SET_DDR,
+	SET_DDR=0x01,
 	SET_PORT,
 	GET_PORT,
 	SET_PIN,
@@ -35,6 +35,10 @@ int is_valid_id(int id)
                 case NULL_MSG:
                 case ECHO_MSG:
                 case ACK:
+                case CONFIRM:
+                case GPIO_CMD:
+                case GPIO_REPLY:
+                case EXCEPTION:
                 case NAK:
                         return 1;
                 default:
@@ -146,13 +150,15 @@ int8_t fetch_tlgrm(struct ringbuffer *src, struct telegram *tg)
 
                         case FSM_PDU:
                                 tg->data[n++] = c;
-                                if (n == TELEGRAM_SZ) state = FSM_FCS;
+                                if (n == TELEGRAM_SZ){
+                                        state = FSM_FCS;
+                                }
                                 break;
 
                         case FSM_FCS:
                                 tg->chksum = c;
                                 if (chksum((uint8_t*)tg, sizeof(struct telegram)) == 0){
-                                        state = ED;
+                                        state = FSM_ED;
                                         break;
                                 } else {
                                         return -4;
