@@ -14,6 +14,12 @@ enum gpio_cmd_list
 	CLR_PIN
 };
 
+enum adc_cmd_list
+{
+        GET_VALUE
+};
+
+
 unsigned char atord(char c)
 {
         if (c >= 'A' && c <= 'Z'){
@@ -38,6 +44,7 @@ int is_valid_id(int id)
                 case CONFIRM:
                 case GPIO_CMD:
                 case GPIO_REPLY:
+                case ADC_CMD:
                 case EXCEPTION:
                 case NAK:
                         return 1;
@@ -46,6 +53,21 @@ int is_valid_id(int id)
                 }
 }
 
+static
+int8_t handler_adc_cmd(void* data)
+{
+        struct adc_cmd
+        {
+                uint8_t ch;
+        };
+
+        uint16_t result;
+        struct adc_cmd *args = (struct adc_cmd *) data;
+
+        if (adc_cmd->ch >= 0 & adc_cmd->ch < 8){
+                    
+        
+        
 static
 int8_t handler_gpio_cmd(void* data)
 {
@@ -58,10 +80,6 @@ int8_t handler_gpio_cmd(void* data)
         uint8_t value;
     };
 
-    #ifdef TESTING  
-    UART_print(UART0,"function call:handler_gpio_cmd");
-	
-    #endif
     struct gpio_cmd *args = (struct gpio_cmd *)data;
     gpio_t* const port = gpio_ports_list[args->port];
 
@@ -118,7 +136,8 @@ int8_t handler_echo_msg(void* data)
 handler_func_t tlgrm_handler_table[ID_TABLE_SIZE] = 
     {
         [ECHO_MSG] = handler_echo_msg,
-	[GPIO_CMD] = handler_gpio_cmd
+	[GPIO_CMD] = handler_gpio_cmd,
+        [ADC_CMD]  = handler_adc_cmd
     };
 
 int8_t fetch_tlgrm(struct ringbuffer *src, struct telegram *tg)

@@ -10,7 +10,7 @@ enum adc_ref
         AREF=0x00,
         AVCC=0x01,
         INTERNAL11=0x03
-}
+};
 
 /*
 
@@ -41,10 +41,10 @@ struct adc
 
 typedef struct adc adc_t;
 
-void adc_enable(adc_t * const a);
-void adc_diable(adc_t * const a);
-int8_t adc_select_chan(adc_t * const a, uint8_t ch);
-int8_t adc_select_refv(adc_t * const a, enum adc_ref r);
-uint16_t  adc_read_ch_blocking(adc_t * const a);
+void adc_enable (adc_t * const a);
+void adc_diable (adc_t * const a);
+int8_t adc_select_ch (adc_t * const a, uint8_t ch);
+int8_t adc_select_refv (adc_t * const a, enum adc_ref r);
+uint16_t  adc_read_ch_blocking (adc_t * const a);
 
 #endif
