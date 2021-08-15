@@ -3,6 +3,7 @@
 
 #include <avr/io.h>
 #include <stdint.h>
+#include "bits.h"
 
 enum adc_ref
 {
@@ -28,13 +29,22 @@ enum adc_chan
         ADCH7
 }
 */
+struct adc
+{
+        uint16_t ADCn;
+        uint8_t  ADCSRnA;
+        uint8_t  ADCSRnB;
+        uint8_t  ADMUXn;
+        uint8_t  _padding_0;
+        uint8_t  DID0n;
+};
 
 typedef struct adc adc_t;
 
 void adc_enable(adc_t * const a);
 void adc_diable(adc_t * const a);
-void adc_select_chan(adc_t * const a, uint8_t ch);
-void adc_select_refv(adc_t * const a, enum adc_ref r);
+int8_t adc_select_chan(adc_t * const a, uint8_t ch);
+int8_t adc_select_refv(adc_t * const a, enum adc_ref r);
 uint16_t  adc_read_ch_blocking(adc_t * const a);
 
 #endif
