@@ -41,6 +41,10 @@ struct adc
 
 typedef struct adc adc_t;
 
+#if defined (__AVR_ATmega328P__) || (__AVR_ATmega328__)
+#define ADC0 ((adc_t *) (0x78))
+#endif
+
 void adc_enable (adc_t * const a);
 void adc_diable (adc_t * const a);
 int8_t adc_select_ch (adc_t * const a, uint8_t ch);

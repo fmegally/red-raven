@@ -6,6 +6,7 @@
 #include "ringbuffer.h"
 #include "gpio.h"
 #include "uart.h"
+#include "adc.h"
 #include "chksum.h"
 
 #define TELEGRAM_SZ        8
@@ -31,6 +32,8 @@ enum telegram_id {
 	CONFIRM=0x07,
 	GPIO_CMD=0x08,
 	GPIO_REPLY=0x09,
+        ADC_CMD=0x0A,
+        ADC_REPLY=0x0B,
 	//Insert new IDs here. IDs
 	NAK=0x15,
 	EXCEPTION=0x17,
