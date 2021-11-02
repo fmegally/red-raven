@@ -15,6 +15,16 @@ enum protocol_state_e {
         PROTOCOL_STATE_TBL_SZ
 };
 
+struct protocol
+{
+        enum protocol_state_e state;
+        uint8_t n_bytes;
+        uint8_t err_flags;
+        uint8_t *dst;
+        uart_t *port;
+        fifo_t *rx_buff;
+        fifo_t *tx_buff;
+};
 
 typedef int8_t (*handler_func_t)(void *data);
 
@@ -24,33 +34,37 @@ static int8_t handler_PDU (protocol_t *p, void* input);
 static int8_t handler_FCS (protocol_t *p, void* input);
 static int8_t handler_ED (protocol_t *p, void* input);
 
-void protocol_init(protocol_t *p, uart_t *u)
+protocol_t* create_protocol(uart_t *u)
 {
+        protocol_t *p = (protocol_t *) malloc(sizeof(protocol_t));
         p->nbytes = 0;
-        p->sstate = ACCEPT_SD;
+        p->state = ACCEPT_SD;
         p->dst = NULL;
         p->err_flags = 0;
         p->port = u;
-        p->rx_buff = NULL;
+        p->rx_buff = (fifo_t *) malloc(sizeof(fifo_t));
+        fifo_init(p->rx_buff, 4 * (FRAME_SZ + SD_SZ + ED_SZ)):
         p->tx_buff = NULL;
-        return;
+        return p;
 }
 
-handler_func_t handlers[SCANNER_STTBL_SZ] = {   [ACCEPT_SD] = handler_SD,
-                                                [ACCEPT_FLAGS] = handler_FALGS,
-                                                [ACCEPT_PDU]  = handler_PDU
-                                                [ACCEPT_FCS] = handler_FCS,
-                                                [ACCEPT_ED] = handler_ED
-                                            };
+handler_func_t handlers[SCANNER_STATE_TBL_SZ] = { [ACCEPT_SD] = handler_SD,
+                                                  [ACCEPT_FLAGS] = handler_FALGS,
+                                                  [ACCEPT_PDU]  = handler_PDU
+                                                  [ACCEPT_FCS] = handler_FCS,
+                                                  [ACCEPT_ED] = handler_ED
+                                                };
 
-static void send_ack_message(uart_t *u)
+inline
+static void send_ack(uart_t *u)
 {
         uint8_t seq[4] = {SD,ACK,~ACK,ED};
         UART_write(u, seq, 4);
         return;
 }
     
-static void send_nak_message(uart_t *u)
+inline
+static void send_nak(uart_t *u)
 {
         uint8_t seq[4] = {SD,NAK,~NAK,ED};
         UART_write(u, seq, 4);
@@ -64,7 +78,7 @@ static int8_t handler_SD (protocol_t *p, void* input)
                 return 0;
         } else {
                 p->state =  ACCEPT_SD;
-                return -1;
+                return 1;
         }
 }
 
@@ -97,42 +111,48 @@ static int8_t handler_FCS (protocol_t *p, void* input)
                 p->state =  ACCEPT_ED;
                 return 0;
         } else {
-                send_nak_tlgrm(p->port);
+                send_nak(p->port);
                 p->state =  ACCEPT_SD;
-                return -1;
+                return 2;
         }
 }
 
 static int8_t handler_ED(protocol_t *p,  void* input)
 {
         if(*((uint8_t*) input) == ED) {
-                send_ack_tlgrm(p->port);
+                send_ack(p->port);
                 p->state =  HALT;
                 return 0;
         } else {
                 protocol.n_bytes=0;
-                send_nak_tlgrm(p->port);
+                send_nak(p->port);
                 p->state =  ACCEPT_SD;
-                return  -1;
+                return  4;
         }
 }
 
 int8_t fetch_message(protocol_t *p, message_t *dst)
 {
         p->state = ACCEPT_SD;
+        p->err_flags = 0;
         p->n_bytes = 0;
         p->dst = dst;
-
+        
         unsigned char c;
         while(p->state != HALT) {
                 if(fifo_getc(&c, p->rx_buff)) {
-                        p->state = handlers[p->state](p, &c);
+                        p->err_flags = handlers[p->state](p, &c);
                 } else {
                         continue;
                 }
         }
         return 0;
 }
+
+int8_t send_message(protocol_t *p message_t *src)
+{
+        
+        
 
 void print_message(message_t *src, uart_t *dst)
 {

@@ -41,20 +41,11 @@ enum message_id_e {
 	MSG_ID_TBL_SIZE
 };
 
-struct protocol
-{
-        enum protocol_state_e state;
-        uint8_t n_bytes;
-        uint8_t err_flags;
-        uint8_t *dst;
-        uart_t *port;
-        fifo_t *rx_buff;
-        fifo_t *tx_buff;
-};
-
 typedef struct protocol protocol_t ;
 
+protocol_t* create_protocol(uart_t *dev);
 int8_t fetch_message(struct protocol_t *p, struct message_t *dst);
+int8_t send_message(struct protocol_t *p, struct message_t *src);
 void print_message(struct message_t *src, uart_t *dst);
     
 #endif
