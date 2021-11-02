@@ -1,8 +1,7 @@
-#include "ringbuffer.h"
+#include "fifo.h"
 #include <stdlib.h>
 
-int
-rb_init(struct ringbuffer* buff, unsigned char buff_size)
+int fifo_init(struct fifo* buff, unsigned char buff_size)
 {
 	buff->data = (unsigned char *) malloc(buff_size * sizeof(unsigned char));
 	if (buff->data == NULL) return -1;
@@ -13,8 +12,7 @@ rb_init(struct ringbuffer* buff, unsigned char buff_size)
 	return 0;
 }
 
-int
-rb_putc(const unsigned char* c, struct ringbuffer* buff)
+int fifo_putc(const unsigned char* c, struct fifo* buff)
 {
 	if (buff->cnt < buff->size){
 		buff->data[buff->head] = *c;
@@ -26,8 +24,7 @@ rb_putc(const unsigned char* c, struct ringbuffer* buff)
 	}
 }
 
-int
-rb_getc(unsigned char* c, struct ringbuffer* buff)
+int fifo_getc(unsigned char* c, struct fifo* buff)
 {
 	if (buff->cnt > 0){
 		*c = buff->data[buff->tail];
@@ -39,16 +36,29 @@ rb_getc(unsigned char* c, struct ringbuffer* buff)
 	}
 }
 
-int
-rb_getblock(struct ringbuffer *buff, unsigned char *block, unsigned int size)
+int fifo_write(struct fifo *buff, unsigned char *data, unsigned int size)
+{
+	if (size <= (buff->size - buff->cnt)){
+		unsigned int i;
+		for (i=0; i<size; i++){
+			buff->data[buff->head] = block[i] ;
+                        buff->head = (buff->head + 1) % buff->size;
+		}
+		buff->cnt = buff->cnt + size;
+		return 0;
+	} else {
+		return -1;
+	}
+}
+
+int fifo_read(struct fifo *buff, unsigned char *data, unsigned int size)
 {
 	if (size <= buff->cnt){
 		unsigned int i;
 		for (i=0; i<size; i++){
 			block[i] = buff->data[buff->tail];
-			buff->tail = (buff->tail + 1) % buff->size;
+		        buff->tail = (buff->tail + 1) % buff->size;
 		}
-		buff->tail = (buff->tail + size) % buff->size;
 		buff->cnt = buff->cnt - size;
 		return 0;
 	} else {
@@ -56,20 +66,17 @@ rb_getblock(struct ringbuffer *buff, unsigned char *block, unsigned int size)
 	}
 }
 
-int
-rb_isempty(const struct ringbuffer *buff)
+int fifo_isempty(const struct fifo *buff)
 {
 	return buff->cnt;
 }
 
-int
-rb_isfull(const struct ringbuffer *buff)
+int fifo_isfull(const struct fifo *buff)
 {
 	return buff->cnt == buff->size;
 }
 
-int
-rb_flush(struct ringbuffer *buff)
+int fifo_flush(struct fifo *buff)
 {
 	buff->cnt = 0;
 	buff->head = 0;
@@ -79,7 +86,7 @@ rb_flush(struct ringbuffer *buff)
 
 //================================================================================
 /*
-rb_init(struct ringbuffer* buff, unsigned char buff_size){
+fifo_init(struct fifo* buff, unsigned char buff_size){
 	buff->size = buff_size;
 	buff->data = (unsigned char *) malloc(buff_size * sizeof(unsigned char));
 	if (buff->data == NULL) return -1;
@@ -89,7 +96,7 @@ rb_init(struct ringbuffer* buff, unsigned char buff_size){
 }
 
 int
-rb_putc(const char* c, struct ringbuffer* buff){
+fifo_putc(const char* c, struct fifo* buff){
 	unsigned int n = (buff->head + 1) % buff->size;
 	if (n != buff->tail){
 		buff->data[buff->head] = *c;
@@ -101,7 +108,7 @@ rb_putc(const char* c, struct ringbuffer* buff){
 }
 
 int
-rb_getc(char* c, struct ringbuffer* buff){
+fifo_getc(char* c, struct fifo* buff){
 	if (!(buff->tail == buff->head)){
 		*c = buff->data[buff->tail];
 		buff->tail = (buff->tail + 1) % buff->size;
@@ -112,12 +119,12 @@ rb_getc(char* c, struct ringbuffer* buff){
 }
 
 int
-rb_isempty(const struct ringbuffer *buff){
+fifo_isempty(const struct fifo *buff){
 	return buff->cnt;
 }
 
 int
-rb_isfull(const struct ringbuffer *buff){
+fifo_isfull(const struct fifo *buff){
 	return buff->cnt == buff->size;
 }
 */
@@ -125,7 +132,7 @@ rb_isfull(const struct ringbuffer *buff){
 //============================================================
 
 /*
-rb_init(struct ringbuffer* buff, unsigned char buff_size){
+fifo_init(struct fifo* buff, unsigned char buff_size){
 	buff->size = buff_size;
 	buff->full = FALSE;
 	buff->data = (unsigned char *) malloc(buff_size * sizeof(unsigned char));
@@ -135,7 +142,7 @@ rb_init(struct ringbuffer* buff, unsigned char buff_size){
 }
 
 int
-rb_putc(const char* c, ringbuffer* buff){
+fifo_putc(const char* c, fifo* buff){
 	if (! buff->full){
 		buff->data[buff->head] = *c;
 		buff->head = (buff->head + 1) % buff->size;
@@ -147,7 +154,7 @@ rb_putc(const char* c, ringbuffer* buff){
 }
 
 int
-rb_getc(char* c, ringbuffer* buff){
+fifo_getc(char* c, fifo* buff){
 	if ((buff->tail) != (buff->head)){
 		*c = buff->data[buff->tail];
 		buff->tail = (buff->tail + 1) % buff->size;
@@ -165,9 +172,9 @@ rb_getc(char* c, ringbuffer* buff){
 }
 
 int
-rb_getblock(ringbuffer *buff, const char *block, unsigned int size)
+fifo_getblock(fifo *buff, const char *block, unsigned int size)
 {
-	int s = ringbuffer_getsize(buff);
+	int s = fifo_getsize(buff);
 	if (s > size){
 		block = &(buff->data[buff->tail]);
 		buff->tail = (buff->tail + size) % buff->size;
@@ -178,7 +185,7 @@ rb_getblock(ringbuffer *buff, const char *block, unsigned int size)
 }
 
 int
-rb_isempty(ringbuffer *buff){
+fifo_isempty(fifo *buff){
 	if (buff->head	== buff->tail){
 		return 1;
 	} else {
@@ -187,7 +194,7 @@ rb_isempty(ringbuffer *buff){
 }
 
 int
-rb_isfull(ringbuffer *buff){
+fifo_isfull(fifo *buff){
 	if((buff->head + 1) % buff->size != buff->tail){
 		return 0;
 	} else {

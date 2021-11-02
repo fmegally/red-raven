@@ -1,12 +1,12 @@
-#ifndef RINGBUFFER_H_
-#define RINGBUFFER_H_
+#ifndef FIFO_H_
+#define FIFO_H_
 
 #define ERROR -1
 
 /* this implementation uses a boolean full flag instead of count*/
 
 /*
-struct ringbuffer {
+struct fifo {
 	unsigned char size;
 	unsigned int head;
 	unsigned int tail;
@@ -17,7 +17,7 @@ struct ringbuffer {
 /* this implementation uses a boolean full flag instead of count*/
 
 /*
-struct ringbuffer {
+struct fifo {
 	unsigned char size;
 	unsigned char full;
 	unsigned int head;
@@ -31,7 +31,7 @@ struct ringbuffer {
 	is full or not.
 */
 
-struct ringbuffer {
+struct fifo {
 	unsigned char size;
 	unsigned char cnt;
 	unsigned int head;
@@ -39,11 +39,14 @@ struct ringbuffer {
 	unsigned char* data;
 };
 
-int rb_init( struct ringbuffer* buff, unsigned char buff_size);
-int rb_putc(const unsigned char *c, struct ringbuffer *buff);
-int rb_getc(unsigned char *c, struct ringbuffer *buff);
-int rb_getblock(struct ringbuffer *buff, unsigned char *block, unsigned int size);
-int rb_isempty(const struct ringbuffer *buff);
-int rb_isfull(const struct ringbuffer *buff);
-int rb_flush(struct ringbuffer *buff);
+typedef struct fifo fifo_t;
+
+int fifo_init(fifo_t *buff, unsigned char buff_size);
+int fifo_putc(const unsigned char *c, fifo_t *buff);
+int fifo_getc(unsigned char *c, fifo_t *buff);
+int fifo_write(fifo_t *buff, unsigned char *data, unsigned int size);
+int fifo_read(fifo_t *buff, unsigned char *data, unsigned int size);
+int fifo_isempty(const fifo_t *buff);
+int fifo_isfull(const fifo_t *buff);
+int fifo_flush(fifo_t *buff);
 #endif

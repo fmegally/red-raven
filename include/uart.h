@@ -83,9 +83,9 @@ typedef struct uart uart_t;
 #endif
 
 void UART_init(uart_t* base, uint32_t baud, uint8_t parity, uint8_t byte_size );
-void UART_read(uart_t* base, uint8_t* buff, uint8_t len);
-void UART_write(uart_t* base, const uint8_t* buff, uint8_t len);
-void UART_print(uart_t* base, const char* str);
+void UART_read_blocking(uart_t* base, uint8_t* buff, uint8_t len);
+void UART_write_blocking(uart_t* base, const uint8_t* buff, uint8_t len);
+void UART_prints(uart_t* base, const char* str);
 void UART_putc(uart_t* base, char c);
 void UART_getc(uart_t* base, char* c);
 

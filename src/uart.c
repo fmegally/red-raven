@@ -5,7 +5,9 @@
  *  Author: fmega
  */ 
 
+#include <avr/interrupt.h>
 #include "uart.h"
+#include "fifo.h"
 
 static inline
 void UART_wait_TX(const uart_t* base)
@@ -20,6 +22,7 @@ void UART_wait_RX(const uart_t* base)
 	while(!(base->UCSRnA & (1 << RXCn)));
 	return;
 }
+
 
 void UART_init(uart_t* base, uint32_t baud, uint8_t parity, uint8_t byte_size )
 {
@@ -49,7 +52,7 @@ void UART_getc(uart_t* base, char *c)
     return;
 }
 
-void UART_write(uart_t* base, const uint8_t* buff, uint8_t len)
+void UART_write_blocking(uart_t* base, const uint8_t* buff, uint8_t len)
 {
 	uint8_t i;
 	for (i = 0; i < len; i++) {
@@ -59,7 +62,7 @@ void UART_write(uart_t* base, const uint8_t* buff, uint8_t len)
 	return;
 }
 
-void UART_read(uart_t* base, uint8_t* buff, uint8_t len)
+void UART_read_blocking(uart_t* base, uint8_t* buff, uint8_t len)
 {
 	uint8_t i;
 	for (i = 0; i < len; i++) {
@@ -69,7 +72,7 @@ void UART_read(uart_t* base, uint8_t* buff, uint8_t len)
 	return;
 }
 
-void UART_print(uart_t* base, const char* str){
+void UART_prints(uart_t* base, const char* str){
 	uint16_t i = 0;
 	while (*(str + i) != '\0'){
 		UART_wait_TX(base);
