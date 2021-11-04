@@ -41,7 +41,7 @@ int fifo_write(struct fifo *buff, unsigned char *data, unsigned int size)
 	if (size <= (buff->size - buff->cnt)){
 		unsigned int i;
 		for (i=0; i<size; i++){
-			buff->data[buff->head] = block[i] ;
+			buff->data[buff->head] = data[i] ;
                         buff->head = (buff->head + 1) % buff->size;
 		}
 		buff->cnt = buff->cnt + size;
@@ -56,7 +56,7 @@ int fifo_read(struct fifo *buff, unsigned char *data, unsigned int size)
 	if (size <= buff->cnt){
 		unsigned int i;
 		for (i=0; i<size; i++){
-			block[i] = buff->data[buff->tail];
+			data[i] = buff->data[buff->tail];
 		        buff->tail = (buff->tail + 1) % buff->size;
 		}
 		buff->cnt = buff->cnt - size;

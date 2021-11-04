@@ -7,6 +7,11 @@
 #include "uart.h"
 #include "chksum.h"
 
+#define SD 0xAA
+#define ED 0x55
+#define ACK 0x03
+#define NAK 0x05
+
 #define ID_SZ              1 * sizeof(uint8_t)
 #define MESSAGE_SZ        8 * sizeof(uint8_t)
 #define PDU_SZ             ID_SZ + MESSAGE_SZ
@@ -25,7 +30,7 @@
 
 struct message {
 	uint8_t id;
-	uint8_t data[TELEGRAM_SZ];
+	uint8_t data[MESSAGE_SZ];
 };
 
 typedef struct message message_t;
@@ -44,8 +49,8 @@ enum message_id_e {
 typedef struct protocol protocol_t ;
 
 protocol_t* create_protocol(uart_t *dev);
-int8_t fetch_message(struct protocol_t *p, struct message_t *dst);
-int8_t send_message(struct protocol_t *p, struct message_t *src);
-void print_message(struct message_t *src, uart_t *dst);
+int8_t fetch_message(protocol_t *p, message_t *dst);
+void send_message(protocol_t *p, message_t *src, uint8_t flags);
+void print_message(message_t *src, uart_t *dst);
     
 #endif

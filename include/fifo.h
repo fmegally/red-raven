@@ -34,8 +34,8 @@ struct fifo {
 struct fifo {
 	unsigned char size;
 	unsigned char cnt;
-	unsigned int head;
-	unsigned int tail;
+	unsigned char head;
+	unsigned char tail;
 	unsigned char* data;
 };
 
