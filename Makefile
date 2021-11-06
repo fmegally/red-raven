@@ -3,7 +3,7 @@ IDIR = ./include
 SDIR = ./src
 
 CC = avr-gcc
-CFLAGS = -Wall -I$(IDIR)
+CFLAGS = -Wall -g -I$(IDIR)
 LIBS = -lm
 PROG = usbtiny
 OBJF = main.o uart.o protocol.o fifo.o gpio.o chksum.o 
@@ -26,5 +26,9 @@ flash:
 
 .PHONY:clean
 clean:
-	echo "Removing build files .."
-	@bash -c 'rm $(ODIR)/{*.o,*.hex,*.bin} && echo "Clean complete !"'
+	@echo "Removing build files .."
+	rm -fv $(ODIR)/*.o
+	rm -fv $(ODIR)/*.bin
+	rm -fv $(ODIR)/*.hex
+	@echo "Clean complete !"
+	#@bash -c 'rm $(ODIR)/{*.o,*.hex,*.bin} && echo "Clean complete !"'

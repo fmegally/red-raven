@@ -6,7 +6,6 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-
 static fifo_t uart_rx_buffer;
 static protocol_t* uart_protocol;
 
@@ -42,13 +41,15 @@ void init_system()
 int main(int argc, char *argv[])
 {
 	init_system();
-	UART_print(UART0,"System initialization complete.\n\r");
-	UART_print(UART0,"===============================\n\r");
-	UART_print(UART0,"THIS IS FOR DEBUGGING ONLY     \n\r");
-	UART_print(UART0,"CHECK TO SEE IF ALL CHARACTERS \n\r");
-	UART_print(UART0,"SHOW UP CORRECTLY              \n\r");
-	UART_print(UART0,"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz\n\r");
-
+        message_t my_message = {0xee,{0x00,0x01,0x02,0x04}};
+        uint8_t i = 0;
+        int16_t j;
+        while (i<255) {
+                my_message.data[0] = i;
+                send_message(uart_protocol,&my_message, 0x00);
+                i++;
+                for (j=0;j<10000;j++);
+        }
 	return 0;
 }
 

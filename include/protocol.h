@@ -49,6 +49,7 @@ enum message_id_e {
 typedef struct protocol protocol_t ;
 
 protocol_t* create_protocol(uart_t *dev);
+void protocol_attach_buffers(protocol_t *p, fifo_t *rx, fifo_t *tx);
 int8_t fetch_message(protocol_t *p, message_t *dst);
 void send_message(protocol_t *p, message_t *src, uint8_t flags);
 void print_message(message_t *src, uart_t *dst);
