@@ -80,6 +80,8 @@ static void send_nak(uart_t *u)
         return;
 }
 
+
+
 static int8_t handler_SD (protocol_t *p, void* input)
 {
         if(*((uint8_t*) input) == SD) {
